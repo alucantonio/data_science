@@ -1,1 +1,9 @@
 .ipynb_checkpoints/
+*.aux
+*.nav
+*.out
+*.log
+*.toc
+*.snm
+*.synctex.gz
+
