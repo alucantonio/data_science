@@ -1,0 +1,170 @@
+\documentclass{beamer}
+\usepackage{subfig}
+\usepackage{amsmath}
+\usepackage{bm}
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+
+\title{Linear Regression}
+\author{Prof. Alessandro Lucantonio}
+\institute{Aarhus University - Department of Mechanical and Production Engineering}
+\date{?/?/2023}
+
+\begin{document}
+	
+	\frame{\titlepage}
+	
+	\section{Linear regression with one variable}
+
+	\begin{frame}
+		\frametitle{Weight-Height example}
+		Dataset: heights and weights of different people.
+		
+		Task: build a model that predict the height given the weight. 
+		
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.5]{images/linear_regression_data}
+			\caption{Data plot}
+		\end{figure}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{A solution - Linear regression model}
+		Some remarks on data.
+		\begin{itemize}
+			\item Regression problem (continuous output).
+			\item Data with different order of magnitude.
+		\end{itemize}
+		A possible solution to this problem is represented by \textbf{linear regression} (LR).
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.4]{images/linear_regression_fit}
+			\caption{Trained model (in red)}
+		\end{figure}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{General ingredients}
+		Notation:
+		\begin{itemize}
+			\item $x$: a data sample.
+			\item $y$: the data target corresponding to $x$
+			\item $N$: number of data.
+		\end{itemize}
+	
+		\vspace{5 mm}
+		
+		Model/hypothesis: $h_{\bm{w}}(x) = w_1x + w_0$, where $\bm{w} = [w_0, w_1]$ is the vector of parameter that has to be learned.
+		
+		In our example, $x$ is the weight of a single sample and $h_{\bm{w}}(x)$ corresponds to the prediction of its height. 
+		
+		\vspace{5 mm}
+		
+		Usually the vector $\bm{w}$ is called \textbf{weights vector} and the set $\mathcal{H}:= \{h_{\bm{w}}| \bm{w} \in \mathbb{R}^2\}$ is called \textbf{hypothesis space}.
+		
+		\vspace{5 mm}
+		
+		How to learn $w$ from data?
+		
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Mean squared error (MSE)}
+		
+		
+		Given a training sample $x_i$ and a model $h_{\bm{w}}$ we can predict the target computing $h_{\bm{w}}(x_i)$. To evaluate how good is the prediction we compute the error $(h_{\bm{w}}(x_i) - y_i)^2$.
+		
+		\vspace{5 mm}
+		
+		$(h_{\bm{w}}(x_i) - y_i)^2 \geq 0$ and $(h_{\bm{w}}(x_i) - y_i)^2 = 0$ if and only if $h_{\bm{w}}(x_i) = y_i$. The \textbf{mean squared error} (MSE) is:
+		$$E({\bm{w}}) := \frac{1}{N} \sum_{i=1}^{N} (h_{\bm{w}}(x_i) - y_i)^2.$$
+		
+		To find the best model we minimize the training error, hence in this case the MSE.
+		
+		$$\bm{w} \in \argmin_{\tilde{\bm{w}} \in \mathbb{R}^2} E(\tilde{\bm{w}}).$$
+		
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{$n$-dimensional LR}
+		\textsl{Dataset samples}.
+		
+		Previous case: $x \in \mathbb{R}, y \in \mathbb{R}$.
+		
+		\vspace{1 mm}
+		
+		Now:  $\bm{x} \in \mathbb{R}^n, y \in \mathbb{R}$.
+		
+		Notation: $x^i_j$ is the $j$-th coordinate of the $i$-th sample.
+		
+		\vspace{5 mm}
+		
+		\textsl{Hypothesis}.
+		
+		Previous case: 
+		\begin{equation*}
+			h_{w}(x) = w_1x + w_0,
+		\end{equation*}
+		where $w = [w_0, w_1]$.
+		
+		\vspace{1 mm}
+		
+		Now: 
+		\begin{align*}
+			h_{\bm{w}}(\bm{x}) &= w_{n}x_n + w_{n-1}x_{n-1} + \dots + w_1 x_1 + w_0\\
+			&= \sum_{i=0}^n w_i \tilde{x}_i = \bm{w}^T \tilde{\bm{x}},\\
+		\end{align*}
+		where $\bm{w} = [w_0, \dots, w_n]$ and $\tilde{\bm{x}} = [1, x_1, \dots, x_n]$.
+		
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{n-dimensional LR}
+		\textsl{MSE}.
+		
+		Previous case: 
+		\begin{equation*}
+			E(\bm{w}) = \frac{1}{N} \sum_{i=1}^{N} (h_{\bm{w}}(x_i) - y_i)^2.
+		\end{equation*}
+		
+		\vspace{1 mm}
+		
+		Now: 
+		\begin{align*}
+			E(\bm{w}) &= \frac{1}{N} \sum_{i=1}^{N} (h_w(\bm{x}^i) - y^i)^2\\
+			&= \frac{1}{N} (\mathsf{X} \bm{w} - \bm{y})^T (\mathsf{X}\bm{w} - \bm{y})\\
+			&= \frac{1}{N} ||\mathsf{X}\bm{w} - \bm{y}||^2
+		\end{align*}
+		
+		where
+		\begin{equation*}
+			\mathsf{X} := \begin{bmatrix}
+				\tilde{\bm{x}}^1\\
+				\vdots\\
+				\tilde{\bm{x}}^N 
+			\end{bmatrix} \quad \bm{y} = \begin{bmatrix}
+			y_1 \\
+			\vdots\\
+			y_N
+		\end{bmatrix}.
+		\end{equation*}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Spot the minimum - Gradient descent}
+		How to find $\bm{w} \in \argmin_{\tilde{\bm{w}} \in \mathbb{R}^2} E(\tilde{\bm{w}})$?
+		
+		Main idea:
+		\begin{itemize}
+			\item Start with a random $\bm{w}^0$.
+			\item For $j \geq 0$, update $\bm{w}^{j+1} := \bm{w}^{j} + \bm{d}^j$, where $\bm{d}^j$ is such that
+			\begin{equation*}
+				E(\bm{w}^{j+1}) \leq E(\bm{w}^j) 
+			\end{equation*}
+		\end{itemize}
+		Gradient descent: $\bm{d}^j = - \alpha \nabla E(\bm{w}^j)$. $\alpha$ is called \textbf{learning rate}.
+	\end{frame}
+
+\end{document}
