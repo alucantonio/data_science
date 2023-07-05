@@ -169,6 +169,86 @@
 	\end{frame}
 
 	\begin{frame}
+		\frametitle{Gradient descent - 3D visualization}
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.4]{images/gradient_descent_3D}
+			\caption{In blue the global minimum, in red the iteration points.}
+		\end{figure}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Gradient descent - 2D visualization}
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.3]{images/gradient_descent_1}
+			\caption{Learning rate = 0.1}
+		\end{figure}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Gradient descent - 2D visualization}
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.3]{images/gradient_descent_2}
+			\caption{Learning rate = 0.4}
+		\end{figure}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Gradient descent - 2D visualization}
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.3]{images/gradient_descent_3}
+			\caption{Learning rate = 0.5}
+		\end{figure}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Batch,SGD and Mini-Batch}
+		Notation: $E(\bm{w}) = 1/N \sum_{i=1}^N E_i(\bm{w})$
+		
+		\vspace{5mm}
+		
+		\textbf{Batch}
+		\begin{itemize}
+			\item Start with a random $\bm{w}^0$.
+			\item For $j \geq 0$, update $\bm{w}^{j+1} := \bm{w}^{j} - \alpha \nabla E(\bm{w}^j)$.
+		\end{itemize}
+		
+		\textbf{SGD} (or online)
+		\begin{itemize}
+			\item Start with a random $\bm{w}^0$.
+			\item For $j \geq 0$ and for each pattern $1\leq i \leq N$ update $\bm{w}^{j+1} := \bm{w}^{j} - \alpha \nabla E_i(\bm{w}^j)$.
+		\end{itemize}
+	
+		\textbf{Mini-Batch}. Fix an integer $1 \leq \text{mb} \leq N$(mini-batch size).
+		\begin{itemize}
+			\item Start with a random $\bm{w}^0$.
+			\item For $j \geq 0$ and for each pattern $0 \leq i < \frac{N}{\text{mb}}$ update
+			\begin{equation*}
+				\bm{w}^{j+1} := \bm{w}^{j} - \alpha \nabla \sum_{k=i\cdot\text{mb} + 1}^{(i+1)\cdot\text{mb}}E_k(\bm{w}^j)
+			\end{equation*}
+		\end{itemize}
+		
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Tips and Tricks - How to choose?}
+		\begin{itemize}
+			\item Batch: usually more stable and provide a more accurate estimation of the gradient, but very slow.
+			\item SGD: very fast, stochastic approximation of the gradient implies possible instability (Zig-zag effect)
+			\item Mini-Batch: a trade-off (parallelism available).
+		\end{itemize}
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.4]{images/gd_mb_sgd}
+			\caption{Batch vs SGD vs Mini-batch}
+		\end{figure}
+	
+	\end{frame}
+
+	\begin{frame}
 		\frametitle{Gradient descent and normal equation for LR}
 		We have $E(\bm{w}) = \frac{1}{N} ||\mathsf{X}\bm{w} - \bm{y}||^2$, hence
 		\begin{equation*}
