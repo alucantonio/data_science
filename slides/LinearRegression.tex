@@ -2,6 +2,7 @@
 \usepackage{subfig}
 \usepackage{amsmath}
 \usepackage{bm}
+
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
 
@@ -167,4 +168,102 @@
 		Gradient descent: $\bm{d}^j = - \alpha \nabla E(\bm{w}^j)$. $\alpha$ is called \textbf{learning rate}.
 	\end{frame}
 
+	\begin{frame}
+		\frametitle{Gradient descent and normal equation for LR}
+		We have $E(\bm{w}) = \frac{1}{N} ||\mathsf{X}\bm{w} - \bm{y}||^2$, hence
+		\begin{equation*}
+			\nabla E(\bm{w}) = \frac{1}{N} \nabla (||\mathsf{X}\bm{w} - \bm{y}||^2) = \frac{2}{N}\mathsf{X}^T(\mathsf{X}\bm{w} - \bm{y})
+		\end{equation*}
+	
+	Normal equation ($\textcolor{red}{\iff}$ holds if $\mathsf{X}^T\mathsf{X}$ is invertible):
+	\begin{align*}
+		\nabla E(\bm{w}) = 0 &\iff \frac{2}{N}\mathsf{X}^T(\mathsf{X}\bm{w} - \bm{y}) = 0\\ 
+		&\iff \mathsf{X}^T\mathsf{X}\bm{w} = \mathsf{X}^T\bm{y}\\
+		& \textcolor{red}{\iff} \bm{w} = (\mathsf{X}^T\mathsf{X})^{-1}\mathsf{X}^T\bm{y}
+	\end{align*}
+	
+	Gradient descent main iteration for LR:
+	
+	\begin{equation*}
+		\bm{w}^{j+1} := \bm{w}^{j} - \frac{2\alpha}{N}\mathsf{X}^T(\mathsf{X}\bm{w}^j - \bm{y})
+	\end{equation*}
+	
+		
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Normal equation vs gradient descent}
+		Normal equation:
+		\begin{itemize}
+			\item No hyperparameter (explicit solution).
+			\item No need to iterate.
+			\item $\mathcal{O}(n^3)$, hence slow when $n$ is large.
+		\end{itemize}
+	
+		\vspace{5mm}
+	
+		Gradient descent:
+		\begin{itemize}
+			\item Need to choose the learning rate $\alpha$.
+			\item Needs many iterations.
+			\item $\mathcal{O}(kn^2)$, hence fast when $n$ is large.
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Tips and Tricks - Standardization}
+		General (not only for LR): features must be on a similar scale!
+		\begin{itemize}
+			\item Speed up the convergence of gradient descent.
+			\item Try to have (on average) $-1 \leq x^i \leq 1$.
+		\end{itemize}
+		Common techniques:
+		\begin{itemize}
+			\item \textbf{Feature scaling}. Compute the max $\bm{M}$ and the min $\bm{m}$ data value. Then normalize each feature as follows
+			\begin{equation*}
+				\bm{x}_{\text{norm}}^i = \frac{\bm{x}^i - \bm{m}}{\bm{M} - \bm{m}}
+			\end{equation*} 
+			\item \textbf{Mean normalization}. Compute mean $\mu$ and standard deviation $\sigma$ of the data. Then normalize each feature as follows
+			\begin{equation*}
+				\bm{x}_{\text{norm}}^i = \frac{\bm{x}^i -\bm{\mu}}{\bm{\sigma}} 
+			\end{equation*}
+		\end{itemize}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Tips and Tricks - Invertibility of $\mathsf{X}^T\mathsf{X}$}
+		What happens when $\mathsf{X}^T\mathsf{X}$ is not invertible?
+		
+		Invertibility of $\mathsf{X}^T\mathsf{X} =$ column of $X$ linearly independent (preprocessing information)
+		
+		\vspace{5mm}
+		
+		If a column is linearly dependent to the other then a feature is correlated with others (redundant feature).
+		
+		\vspace{5mm}
+		
+		Solution: discard that feature. The information carried by that feature is contained in some of the others. 
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Polynomial regression (PR)}
+		LR corresponds to linear hypothesis, i.e. of the form
+		\begin{equation*}
+			h_{\bm{w}}(\bm{x}) = \bm{w}^T \bm{x}
+		\end{equation*}
+		
+		\vspace{5mm}
+		
+		PR corresponds to polynomial hypothesis, i.e. of the form
+		\begin{equation*}
+			h_{\bm{w}}(\bm{x}) = \sum_{j=0}^n w_j x^j_j.
+		\end{equation*}
+		
+		\vspace{5mm}
+		More in general: linear basis expansion (LBE)
+		\begin{equation*}
+			h_{\bm{w}}(\bm{x}) = \sum_{j=0}^n w_j \phi_j(\bm{x}),
+		\end{equation*}
+		where $\phi_j: \mathbb{R}^n \rightarrow \mathbb{R}$.
+	\end{frame}
 \end{document}
