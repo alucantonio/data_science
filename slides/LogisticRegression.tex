@@ -74,5 +74,69 @@
 
 	\begin{frame}
 		\frametitle{Cost function}
+		
+		First try: MSE
+		\begin{equation*}
+			E(\bm{w}) = \frac{1}{N} \sum_{i= 0}^{N} (\sigma(\bm{w}^T\bm{x^i}) - y)^2
+		\end{equation*}
+		
+		Huge problem: $\sigma$ \textsl{non-convex}, hence MSE is \textsl{non-convex} (many local minima).
+		
+		\vspace{5mm}
+		
+		Main idea: if $y=1$ the prediction $h_{\bm{w}}(x)$ is good when $h_{\bm{w}}(x) \approx 1$. Good prediction means low error and $\log(1) = 0$.
+		
+		\vspace{5mm}
+		
+		Second try: \textbf{Binary cross-entropy}
+		\begin{equation*}
+			E(\bm{w}) := - \frac{1}{N} \sum_{i=1}^{N} y^i\log(h_{\bm{w}}(x^i)) + (1-y^i)\log(1-h_{\bm{w}}(x^i))
+		\end{equation*}
+		
+		
+		
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Parenthesis - What is a convex function?}
+		A function is \textsl{convex} when for all pairs of points on the graph, the line segment that connects these two points passes above the curve.
+		
+		A function is \textsl{concave} when its opposite is convex.
+		
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.1]{images/convexity}
+			\caption{Geometric intuition of convexity}
+		\end{figure}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Parenthesis - The power of convexity}
+		Any local minimum of a convex function is also a global minimum. 
+		Instead, a non-convex function has potentially many local minima which are not global minima and many saddle points (points with null gradient but nor minimum nor maximum).
+		
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.3]{images/non_convex}
+			\caption{An example of non-convex function}
+		\end{figure}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Tips and Tricks - Is a local minimum always a bad news?}
+		
+		Overfitting is around the corner. Finding a global minimum means that we have the best fit possible on the training set: this is a potentially red flag on overfitting.
+		
+		\vspace{5mm}
+		
+		Of course is better to have a convex cost function, but this is not always the case. In that cases, finding a local minimum is probably even better than a global minimum. 
+		
+		Remember our goal: \textbf{generalization}.
+		
+		\vspace{5mm}
+		
+		Worst case scenario: find a saddle point.
+		
+		
 	\end{frame}
 \end{document}
