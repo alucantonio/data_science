@@ -136,6 +136,75 @@
 		\vspace{5mm}
 		
 		Worst case scenario: find a saddle point.
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Derivative of the sigmoid}
+		Goal: Compute the gradient of the Cross-entropy.
+		
+		\vspace{5mm}
+		
+		Recall: $\sigma(t) := \frac{1}{1+e^{-t}}$.
+		
+		\begin{align*}
+			\frac{\textrm{d}}{\textrm{d}t} \sigma(t) &= \frac{e^{-t}}{(1 + e^{-t})^2}\\
+			&= \left(\frac{1}{1 + e^{-t}}\right)\left(\frac{e^{-t}}{1 + e^{-t}}\right)\\
+			&= \sigma(t)\left(1 - \frac{1}{1 + e^{-t}}\right)\\
+			&= \sigma(t)(1 - \sigma(t)).
+		\end{align*}
+		
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Gradient of the Cross-entropy}
+		
+		Einstein notation: $\sum_{i} a_i \leadsto a_i$
+		
+		\begin{align*}
+			\frac{\partial}{\partial w_j} h_{\bm{w}}(\bm{x}) &= \sigma'(\bm{w}^T \bm{x}) x_j = \sigma(\bm{w}^T \bm{x})(1 - \sigma(\bm{w}^T \bm{x}))x_j\\
+			 &= h_{\bm{w}}(\bm{x})(1 - h_{\bm{w}}(\bm{x}))x_j 
+		\end{align*}
+		
+		\begin{align*}
+			N\frac{\partial}{\partial w_j} E(\bm{w}) &= - \left[y^i	\frac{\partial}{\partial w_j}\log(h_{\bm{w}}(\bm{x}^i)) + (1-y^i)	\frac{\partial}{\partial w_j}\log(1-h_{\bm{w}}(\bm{x}^i))\right]\\
+			&= - \left[\frac{y^i \frac{\partial}{\partial w_j}h_{\bm{w}}(\bm{x}^i)}{h_{\bm{w}}(\bm{x}^i)} - \frac{(1-y^i) \frac{\partial}{\partial w_j}(1 -h_{\bm{w}}(\bm{x}^i))}{1-h_{\bm{w}}(\bm{x}^i)}\right]\\
+		\end{align*}
+	
+	\mbox{}\hfill $\rightarrow$
+	
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Gradient of the Cross-entropy}
+		\begin{align*}
+			&= -[y^i(1 - h_{\bm{w}}(\bm{x^i}))x^i_j - (1-y^i)h_{\bm{w}}(\bm{x^i})x^i_j]\\
+			&= -[y^i -  h_{\bm{w}}(\bm{x^i})]x^i_j\\
+			& = [h_{\bm{w}}(\bm{x^i})- y^i]x^i_j.
+		\end{align*}
+	Final result:
+		\begin{align*}
+			\frac{\partial}{\partial w_j} E(\bm{w}) = -\frac{1}{N} \sum_{i=0}^{N} [h_{\bm{w}}(\bm{x^i})- y^i]x^i_j.
+		\end{align*}
+	
+	Vectorized version:
+	\begin{align*}
+		\nabla_{\bm{w}}E(\bm{w}) = \frac{1}{N} \mathsf{X}^T(\sigma(\mathsf{X}\bm{w}) - \bm{y}).
+	\end{align*}
+	
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Multiclass classification: One-vs-all}
+		
+		Multi-classification: $y \in \{0, \dots, k\}$.
+		
+		\vspace{5mm}
+		
+		Idea: solve $k+1$ binary classification problem. Given a data sample $\bm{x}$
+		\begin{itemize}
+			\item Establish for any $0\leq j \leq k$ what is the probability $h^{(j)}_{\bm{w}}(\bm{x})$ (=output of the sigmoid) that $\bm{x}$ belongs to the class j.
+			\item The final prediction will be the class which provides the maximum probability, i.e. $\argmax_j h^{(j)}_{\bm{w}}(\bm{x})$ 
+		\end{itemize}
 		
 		
 	\end{frame}
