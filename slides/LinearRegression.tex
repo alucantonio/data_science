@@ -157,7 +157,13 @@
 		\frametitle{Spot the minimum - Gradient descent}
 		How to find $\bm{w} \in \argmin_{\tilde{\bm{w}} \in \mathbb{R}^2} E(\tilde{\bm{w}})$?
 		
-		Main idea:
+		\vspace{5mm}
+		
+		Main idea: the gradient of a scalar field represent geometrically the direction with maximum slope. Hence, following the opposite direction of the gradient lead us to get closer to the minimum of the function.
+		
+		\vspace{5mm}
+		
+		Formally:
 		\begin{itemize}
 			\item Start with a random $\bm{w}^0$.
 			\item For $j \geq 0$, update $\bm{w}^{j+1} := \bm{w}^{j} + \bm{d}^j$, where $\bm{d}^j$ is such that
@@ -205,7 +211,7 @@
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{Batch,SGD and Mini-Batch}
+		\frametitle{Batch, SGD and Mini-Batch}
 		Notation: $E(\bm{w}) = 1/N \sum_{i=1}^N E_i(\bm{w})$
 		
 		\vspace{5mm}
@@ -216,7 +222,7 @@
 			\item For $j \geq 0$, update $\bm{w}^{j+1} := \bm{w}^{j} - \alpha \nabla E(\bm{w}^j)$.
 		\end{itemize}
 		
-		\textbf{SGD} (or online)
+		\textbf{Stochastic Gradient Descent} (SGD or online)
 		\begin{itemize}
 			\item Start with a random $\bm{w}^0$.
 			\item For $j \geq 0$ and for each pattern $1\leq i \leq N$ update $\bm{w}^{j+1} := \bm{w}^{j} - \alpha \nabla E_i(\bm{w}^j)$.
@@ -311,6 +317,16 @@
 	\end{frame}
 
 	\begin{frame}
+		\frametitle{Tips and Tricks - Standardization}
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.35]{images/feature-scaling}
+		\end{figure}
+
+		
+	\end{frame}
+
+	\begin{frame}
 		\frametitle{Tips and Tricks - Invertibility of $\mathsf{X}^T\mathsf{X}$}
 		What happens when $\mathsf{X}^T\mathsf{X}$ is not invertible?
 		
@@ -345,5 +361,32 @@
 			h_{\bm{w}}(\bm{x}) = \sum_{j=0}^n w_j \phi_j(\bm{x}),
 		\end{equation*}
 		where $\phi_j: \mathbb{R}^n \rightarrow \mathbb{R}$.
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Underfitting and overfitting - main intuition}
+		
+		Imagine that you have to prepare an exam. 
+		
+		\vspace{5mm}
+		
+		Doing only a few exercises lead a poor perfomance both on homeworks and on the exam exercises. This is called \textsl{underfitting}: you have a bad performance on the exam because you did not trained enough.
+		
+		\vspace{5mm}
+		
+		Moreover, brutally memorize all the homework lead to a perfect score on homeworks (trivially) but probably a bad score on the exam exercises. This is called \textsl{overfitting}: you have a bad performance on the exam because you did not captured the true essence of your homework, you have also memorize their ''noise'' (homework pecularities).
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Underfitting and overfitting - another example}
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.35]{images/overfitting_poly}
+			\caption{Underfitting (degree 1), good fitting (degree 4), overfitting (degree 15).}
+		\end{figure}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{How to counter overfitting}
 	\end{frame}
 \end{document}
