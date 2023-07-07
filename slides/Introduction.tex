@@ -77,16 +77,45 @@
 			\centering
 			\includegraphics[scale=0.3]{images/alphago}
 		\end{figure}
-	
 	"AlphaGo is the first computer program to defeat a professional human Go player, the first to defeat a Go world champion, and is arguably the strongest Go player in history." 
 	
 	More info: \href{https://www.deepmind.com/research/highlighted-research/alphago}{https://www.deepmind.com/research/highlighted-research/alphago}
-		
-		
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{Supervised Learning}
+		\frametitle{ML road map}
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.4]{images/road-map}
+		\end{figure}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Data}
+		Data captures the structure of the problem.
+		
+		\vspace{5mm}
+		
+		The data instances are called \textbf{samples} and each sample has different \textbf{attribute} values. The kind and the number of attribute is common for each sample. We will see two types of attributes
+		
+		
+		\begin{itemize}
+			\item Continuous attributes (real numbers).
+			\item Categorical (or discrete) attributes (integers). 
+		\end{itemize}
+	
+		\vspace{5mm}
+		
+		Preprocessing: prepare and manipulate data to make them suitable for the model.
+	\end{frame}
+	
+
+	\begin{frame}
+		\frametitle{Tasks - Supervised Learning}
+		The task is the purpose of the application.
+		
+		\vspace{5mm}
+		
 		In \textbf{supervised learning}, a dataset of input-output relations is provided.
 		The learning is supervised because we already know how the current looks like.
 		
@@ -110,7 +139,7 @@
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{Unsupervised Learning}
+		\frametitle{Tasks- Unsupervised Learning}
 		In \textbf{unsupervised learning}, we have no idea how the output looks like (unlabeled data). We have to derive structure and different relationships from data.
 		
 		Examples:
@@ -130,5 +159,39 @@
 			\caption{A clustering example.}
 		\end{figure}
 	\end{frame}
+
+	\begin{frame}
+		\frametitle{Model}
+		Main goal: describe data relationships through a language
+		
+		\vspace{5mm}
+		
+		Hypotheses: a candidate model for the task.
+		
+		Hypotheses space: the class of hypotheses that the learning algorithm (see later) can produce.
+		
+		\vspace{5mm}
+		
+		No free lunch theorem (idea): it does not exist a universal best learning method.
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Learning algorithm}
+		Based on: data, task and model.
+		
+		\vspace{5mm}
+		
+		Search method: find the best hypothesis in the hypothesis space.
+		
+		\vspace{5mm}
+		
+		Best hypothesis means ''minimum error''. The error function is called \textsl{cost function} (or \textsl{loss function}).
+		
+		\vspace{5mm}
+		
+		Crucial: the aim is \textsl{generalize} and NOT \textsl{fitting}. We want to avoid models which performs extremely good on our data and poorly on unseen data (overfitting).
+	\end{frame}
+
+	
 	
 \end{document}
