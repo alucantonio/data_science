@@ -388,5 +388,69 @@
 
 	\begin{frame}
 		\frametitle{How to counter overfitting}
+		
+		Overfitting can be countered in many ways.
+		
+		\vspace{5mm}
+		
+		\begin{itemize}
+			\item Validation, the true core of Machine Learning.
+			\item Early stopping.
+			\item Ensembling.
+			\item Regularization.
+		\end{itemize}
+	
+		\vspace{5mm}
+	
+		Now we focus on regularization and the general intuition behind it, lately in this course we are going to address the other points.
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Tikhonov regularization}
+		
+		Overfitting phenomenon is highly correlated with complex models. To avoid complex models, the idea is to penalize models with large weights. One way to do it is to consider the following cost function
+		
+	\vspace{5mm}
+	
+		\begin{equation*}
+			E_{r}(\bm{w}) = E(\bm{w}) + \underbrace{\lambda ||\bm{w}||^2}_{R_{\lambda}(\bm{w})}.
+		\end{equation*}
+		
+	\vspace{5mm}
+	
+	$R_{\lambda}$ is called \textsl{Tikhonov regularization} (or $L^2$ regularization). More in general, we will call \textsl{regularization term} the term added to the error function involving the type of regularization chosen.
+	
+	\vspace{5mm}
+	
+	$\lambda > 0$ is an hyperparameter that must be chosen in the model selection phase.
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{LR with Tikhonov regularization}
+		New cost function:
+		\begin{equation*}
+			E_{r}(\bm{w}) = E(\bm{w}) + \lambda ||\bm{w}||^2.
+		\end{equation*}
+		
+		Gradient of the cost function:
+		\begin{equation*}
+			\nabla E_r(\bm{w}) = \nabla E(\bm{w}) + 2 \lambda \bm{w} = 2(\frac{1}{N}\mathsf{X}^T(\mathsf{X}\bm{w} - \bm{y}) + \lambda \bm{w})
+		\end{equation*}
+	
+		Normal equation:
+		\begin{equation*}
+			\bm{w} = (\mathsf{X}^T\mathsf{X} + \lambda \mathsf{I})^{-1}\mathsf{X}^T\bm{y}
+		\end{equation*}
+	
+	Note that in this case $\mathsf{X}^T\mathsf{X} + \lambda \mathsf{I}$ is \textsl{always} invertible (why? :) )
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Most common regularization techniques}
+		\begin{itemize}
+			\item Tikhonov regularization: $R_{\lambda}(\bm{w}) = \lambda ||w||_2$. Tends to bring all the weights to small values.
+			\item Lasso: $R_{\lambda}(\bm{w}) = \lambda ||w||_1$. Tends to bring some weights to $0$ (feature selection).
+			\item Elastic net: $R_{\lambda}(\bm{w}) = \lambda_1 ||w||_1 + \lambda_2 ||w||_2$.
+		\end{itemize}
 	\end{frame}
 \end{document}
