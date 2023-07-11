@@ -50,4 +50,40 @@
 		N.B. Model selection and model assessment must be kept separated. Once we have chosen a final model, we are done with the model selection phase and model assessment is needed only to test the model on new data.
 	\end{frame}
 
+	\begin{frame}
+		\frametitle{Double Hold out (Selection+Assessment)}
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.3]{images/hold-out}
+		\end{figure}
+		\begin{itemize}
+			\item We split the entire dataset in three parts: training set, validation set and test set. Usually, training+validation constitutes the majority of the data available.
+			\item Training set is used to fit. When the model is fitted, we evaluate its performance computing the error on the validation set.
+			\textbf{Validation set is not a good estimation for the test error}.
+			\item When a model is chosen, we evaluate its generalization capability computing the error on the test set. \textbf{Test set must not be used for hyperparameters selection}.
+		\end{itemize}	
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Cross validation (Selection or Assessment)}
+		\begin{columns}
+			\column{0.38\linewidth}
+			\begin{figure}
+				\centering
+				\includegraphics[scale=0.4]{images/cross-validation}
+				\caption{5-fold CV}
+			\end{figure}
+			\column{0.58\linewidth}
+			\begin{itemize}
+				\item Split the data in $k$ disjoint folds.
+				\item Use $k-1$ folds as the training set and the other fold as the validation set. Repeat it $k$ time (look figure).
+				\item The performance will be the mean $\pm$ standard deviation computed across the $k$ runs.
+			\end{itemize}
+		\end{columns}
+		Pro: Not sensible to a particular partition of the data. Mean filter the error.
+		
+		Contra: Computationally expensive (but parallellizable).
+
+	\end{frame}
+
 \end{document}
