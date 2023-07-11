@@ -83,7 +83,72 @@
 		Pro: Not sensible to a particular partition of the data. Mean filter the error.
 		
 		Contra: Computationally expensive (but parallellizable).
-
 	\end{frame}
 
+	\begin{frame}
+		\frametitle{CV for selection and hold out for assessment}
+		\begin{enumerate}
+			\item Split dataset in two parts (hold out). One constitutes the development set $D$ (model selection), the latter is the test set $T$ (model assessment).
+			\item Use the cross validation method on $D$ to select the best model.
+			\item Evaluate its performance on the \textbf{external} test set $T$.
+		\end{enumerate}
+	
+		Optional: after completing 2., hence after choosing the best hyperparameters and the best models, you can retrain (i.e. refit) the best model in the entire dataset $D$. In this way you exploit fully data you can for training.
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Grid search (Selection)}
+		
+		How to search the best tuple of hyperparameters?
+		
+		\vspace{5mm}
+		
+		\textbf{Example}: two hyperparameters to choose (learning rate $\alpha$ and regularization parameter $\lambda$). Consider a set of values for both, e.g. $\alpha_{\text{vals}} = \{0.001, 0.01, 0.1\}, \lambda_{\text{vals}} = \{0.0001, 0.001, 0.01\}$. 
+		
+		Evaluate the model with $(\alpha, \lambda) = (i,j)$ for $i \in \alpha_{\text{vals}}, j \in \lambda_{\text{vals}}$.
+		
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.4]{images/grid-search}
+		\end{figure}
+		
+		\textbf{Refinement}: Suppose that the best is $(0.1, 0.001)$. Then we can "zoom" near the best couple, doing another grid search with e.g. $\alpha_{\text{vals}} = \{0.075, 0.1, 0.125\}, \lambda_{\text{vals}} = \{0.00075, 0.001, 0.00125\}$. 
+		
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Bias and Variance definitions}
+		\textbf{Bias}: discrepancy between true targets and the prediction of the current hypothesis.
+		
+		\vspace{5mm}
+		
+		\textbf{Variance}: variability of the predictions of the current hypothesis for different training data.
+		
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.3]{images/bias-variance}
+			\caption{Yellow curve: validation error.}
+		\end{figure}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Bias-Variance: some intutitions}
+		$\lambda$: regularization parameter.
+		
+		\vspace{5mm}
+		
+		\begin{itemize}
+			\item High $\lambda$: high bias (underfitting).
+			\item Low $\lambda$: high variance (overfitting)
+			\item Intermediate $\lambda$: optimal solution.
+		\end{itemize}
+	
+		\vspace{5mm}
+		
+		Complex model $\leadsto$ noise of the data captured $\leadsto$ high variance, low bias.
+		
+		\vspace{5mm}
+		
+		Simple model $\leadsto$ rigid hypothesis $\leadsto$ low variance, high bias.
+	\end{frame}
 \end{document}
