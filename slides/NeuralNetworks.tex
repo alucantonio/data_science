@@ -204,6 +204,9 @@
 		\frametitle{NN best practices}
 		\begin{itemize}
 			\item Initialize all weights randomly near zero, but \textbf{avoid} to initialize it constantly zero. As a general recipe: the more you are random the more you do not introduce bias.
+			\item Try random starting configurations. For each configurations do multiple runs and look to the mean $\pm$ std results. 
+			\item Number of epochs (i.e. number of iterations of SGD) are not an hyperparameter. Fix it to an appropriate number (e.g. 5000 or less) to avoid too slow convergences.
+			\item Use regularization to counter overfitting.
 		\end{itemize}
 	\end{frame}
 \end{document}
