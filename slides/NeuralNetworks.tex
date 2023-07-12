@@ -133,4 +133,77 @@
 		
 		Include in your model selection process as many different architectures/activation functions as you can.
 	\end{frame}
+
+	\begin{frame}
+		\frametitle{Back-propagation - Intuition}
+		Notation: $E(\mathsf{W}) = \frac{1}{N} \sum_{j=0}^{N} E_j(\mathsf{W})$ and  $\mathsf{W} = (\mathsf{W}^{(1)}, \dots, \mathsf{W}^{(m-1)})$.
+		
+		\vspace{5mm}
+		
+		To apply gradient descent we have to compute $\nabla E(\mathsf{W})$. In the case of NN gradient descent algorithm is called \textbf{back-propagation}, since it allows the information from the cost to then ﬂow backward through the network in order to compute the gradient.
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.35]{images/backprop}
+		\end{figure}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Back-propagation - Formal}
+		Formal computation only for $E =$ MSE.
+		
+		\vspace{5mm}
+		
+		Goal: Our goal is to compute $\nabla E_i(\mathsf{W})$ or equivalently $\frac{\partial E_i}{\partial w_{jk}}$.
+		
+		\vspace{5mm}
+		
+		Chain rule:
+		\begin{equation*}
+			\frac{\partial E_i}{\partial w_{jk}} = \underbrace{\frac{\partial E_i}{\partial (n_t)_{j}}}_{A} \underbrace{\frac{\partial (n_t)_{j}}{\partial w_{jk}}}_{B}.
+		\end{equation*}
+		
+		B:
+		\begin{align*}
+			\frac{\partial (n_t)_{j}}{\partial w_{jk}} = \frac{\partial}{\partial w_{jk}} \sum_{p} w_{jp} a^{(t)}_p =   a^{(t)}_k
+		\end{align*}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Back-propagation - Formal}
+		A:
+		\begin{align*}
+			\frac{\partial E_i}{\partial (n_t)_{j}} = \underbrace{\frac{\partial E_i}{\partial (h_t)_j}}_{C} \underbrace{\frac{\partial (h_t)_j}{\partial (n_t)_{j}}}_{D}
+		\end{align*}
+		D:
+		\begin{align*}
+			\frac{\partial (h_t)_j}{\partial (n_t)_j} = \frac{\partial}{\partial (n_t)_{j}} (f_t(n_t))_j = f_t((n_t)_j) = f'_t((n_t)_j) = (f'_t(n_t))_j
+		\end{align*}
+		C in the case of $t = m-1$ (output layer):
+		\begin{align*}
+			\frac{\partial E_i}{\partial (h_{m-1})_j} = \frac{\partial}{\partial (h_{m-1})_j} (\bm{y}_i - h_{m-1}(\bm{x}^i))^2 = -2((\bm{y}_i)_j - (h_{m-1}(\bm{x}^i))_j)
+		\end{align*}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Back-propagation - Formal}
+		
+		
+		C in the case of $t = m-2$ (notation):
+		\begin{align*}
+			\frac{\partial E_i}{\partial (h_{m-2})_j} = \sum_k \frac{\partial E_i}{\partial (n_{m-1})_k} \frac{\partial (n_{m-1})_k}{\partial (h_{m-2})_j}.
+		\end{align*}
+	
+		Note that the terms $\frac{\partial E_i}{\partial (n_{m-1})_k}$ have been already calculated in the previous case. The other term is easy:
+		\begin{align*}
+			\frac{\partial (n_{m-1})_k}{\partial (h_{m-2})_j} = \frac{\partial}{\partial (h_{m-2})_j}\sum_{p} w_{kp} (h_{m-2})_p = {w}_{kj}.
+		\end{align*}
+		At this point we continue going backward and computing C for $t = m-3, \dots, 1$.
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{NN best practices}
+		\begin{itemize}
+			\item Initialize all weights randomly near zero, but \textbf{avoid} to initialize it constantly zero. As a general recipe: the more you are random the more you do not introduce bias.
+		\end{itemize}
+	\end{frame}
 \end{document}
