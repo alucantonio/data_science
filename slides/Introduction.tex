@@ -1,7 +1,7 @@
 \documentclass{beamer}
 \usepackage{subfig}
 
-
+\setbeamertemplate{footline}[frame number]
 \title{Introduction to Machine Learning}
 \author{Prof. Alessandro Lucantonio}
 \institute{Aarhus University - Department of Mechanical and Production Engineering}
@@ -15,7 +15,7 @@
 		\frametitle{What is Machine Learning?}
 		\begin{itemize}
 			\item Arthur Samuel (1959). Machine learning is a “Field of study that gives computers the ability to learn without being explicitly programmed”.
-			\item Tom Mitchell (1998). “A computer program is said to learn from experience E with respect to some class of tasks T and performance measure P, if its performance at tasks in T, as measured by P, improves with experience E”.
+			\item Tom Mitchell (1998). “A computer program is said to learn from experience \textit{E} with respect to some class of tasks \textit{T} and performance measure \textit{P}, if its performance at tasks in \textit{T}, as measured by \textit{P}, improves with experience \textit{E}”.
 		\end{itemize}
 		
 	\end{frame}
@@ -37,22 +37,21 @@
 
 	\begin{frame}
 		\frametitle{Some applications - Speech and voice recognition}
+		Speech recognition involves recording words using a recording device. The audio is then converted into a set of words stored digitally within the device or program. Instead, the purpose of voice recognition is to identify the person who is speaking.
 		\begin{figure}
 			\centering
 			\subfloat[\centering]{{\includegraphics[scale=0.13]{images/speech-recognition-1}}}
 			\qquad
 			\subfloat[\centering]{{\includegraphics[scale=0.13]{images/speech-recognition-2}}}
 		\end{figure}
-	Two examples of speech and voice recognition. 
-	
 	(c) A general idea of speech recognition. 
 	
-	(d) Apple Siri.
+	(d) Google’s voice assistant provide individualized responses (e.g. calendar updates or reminders) only to the users who trained the assistant to recognize their voices.
 	
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{Some applications - Self driving cars}
+		\frametitle{Some applications - Self-driving cars}
 		\begin{figure}
 			\centering
 			\includegraphics[scale=0.3]{images/self-driving-1}
@@ -63,12 +62,11 @@
 
 	\begin{frame}
 		\frametitle{Some applications - Email spam filtering}
+		Task: determine if a given email is spam or not.
 		\begin{figure}
 			\centering
 			\includegraphics[scale=0.5]{images/spam-filtering-1}
 		\end{figure}
-		Determine if a given email is spam or not.
-		
 	\end{frame}
 
 	\begin{frame}
@@ -83,30 +81,49 @@
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{ML road map}
-		\begin{figure}
-			\centering
-			\includegraphics[scale=0.4]{images/road-map}
-		\end{figure}
-	\end{frame}
-
-	\begin{frame}
 		\frametitle{Data}
-		Data captures the structure of the problem.
+		A \textbf{sample} (or example) is a collection of \textbf{attributes} (or features) that have been quantitatively measured from some object or event that we want the ML system to process.
 		
 		\vspace{5mm}
 		
-		The data instances are called \textbf{samples} and each sample has different \textbf{attribute} values. The kind and the number of attribute is common for each sample. We will see two types of attributes
+		
+		A \textbf{dataset} is a collection of many samples.
+		
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.25]{images/data-example}
+		\end{figure}
+		
+		
+		We will see two types of attributes
 		
 		
 		\begin{itemize}
 			\item Continuous attributes (real numbers).
 			\item Categorical (or discrete) attributes (integers). 
 		\end{itemize}
-	
-		\vspace{5mm}
-		
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Data - Attributes}
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.3]{images/data-attributes}
+			\caption{"MinTemp" is an example of continuous attribute, while "RainToday" is an example of categorical attribute (Yes = 1, No = 0).}
+		\end{figure}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Data - Preprocessing}
 		Preprocessing: prepare and manipulate data to make them suitable for the model.
+		
+		Why Preprocessing:
+		\begin{itemize}
+			\item \textbf{Data cleaning}. Identifying and correcting inconsistencies in the data.
+			\item \textbf{Data transformation}. Converting the data into a suitable format
+			\item \textbf{Data reduction}. Reducing the size of the dataset preserving as much as you can the important information
+			\item \textbf{Data Normalization}. Scaling the data to a common range (usually between 0 and 1 or -1 and 1).
+		\end{itemize}
 	\end{frame}
 	
 
@@ -116,15 +133,16 @@
 		
 		\vspace{5mm}
 		
-		In \textbf{supervised learning}, a dataset of input-output relations is provided.
-		The learning is supervised because we already know how the current looks like.
+		\textbf{Supervised learning} consitutes of task where the dataset contains features, but each example is also associated with a \textbf{target} (also called label).
+		
+		The term supervised learning originates from the view of the target being provided by an instructor or teacher who shows the ML system what to do.
 		
 		Two type of supervised learning problems:
 		\begin{itemize}
 			\item \textbf{Regression}. Predict results within a continuous output.
 			
 			Example: Predict the price of an house given its size.
-			\item \textbf{Classification}.  Predict results within a discrete output (categorical data).
+			\item \textbf{Classification}.  Predict which categories/classes the input belongs to (categorical data).
 			
 			Example: Given an email, predict if it is spam or not (\textsl{binary classification})
 		\end{itemize}
@@ -140,7 +158,7 @@
 
 	\begin{frame}
 		\frametitle{Tasks- Unsupervised Learning}
-		In \textbf{unsupervised learning}, we have no idea how the output looks like (unlabeled data). We have to derive structure and different relationships from data.
+		\textbf{Unsupervised learning} tasks experience a dataset containing many features, then learn useful properties of the structure of this dataset (\textbf{unlabeled data}). In other terms, we have to derive structure and different relationships from data.
 		
 		Examples:
 		\begin{itemize}
@@ -162,7 +180,7 @@
 
 	\begin{frame}
 		\frametitle{Model}
-		Main goal: describe data relationships through a language
+		A \textbf{model} is an abstract representation of a system using mathematical concepts. In the present context, the model operates on data to solve the task.
 		
 		\vspace{5mm}
 		
@@ -172,24 +190,36 @@
 		
 		\vspace{5mm}
 		
-		No free lunch theorem (idea): it does not exist a universal best learning method.
+		No free lunch theorem (idea): no machine learning algorithm is universally any better than any other.
 	\end{frame}
 
 	\begin{frame}
 		\frametitle{Learning algorithm}
+		A machine learning algorithm, in brief \textbf{learning algorithm}, is an algorithm that is able to learn from data.
+		
+		\vspace{5mm}
+		
 		Based on: data, task and model.
 		
 		\vspace{5mm}
 		
-		Search method: find the best hypothesis in the hypothesis space.
+		To evaluate the abilities of a learning algorithm, we must design a quantitative measure of its performance. Usually this performance measure \textit{P} is speciﬁc to the task being carried out by the system.
 		
 		\vspace{5mm}
 		
-		Best hypothesis means ''minimum error''. The error function is called \textsl{cost function} (or \textsl{loss function}).
+		The performance measure is called \textsl{cost function} (or \textsl{loss function}).
 		
 		\vspace{5mm}
 		
-		Crucial: the aim is \textsl{generalize} and NOT \textsl{fitting}. We want to avoid models which performs extremely good on our data and poorly on unseen data (overfitting).
+		Example: a performance measure for the classification tasks is the \textbf{accuracy}. Accuracy is just the proportion of examples for which the model produces the correct output.
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{ML road map}
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.4]{images/road-map}
+		\end{figure}
 	\end{frame}
 
 	

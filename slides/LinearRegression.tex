@@ -3,10 +3,11 @@
 \usepackage{amsmath}
 \usepackage{bm}
 
+
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
 
-
+\setbeamertemplate{footline}[frame number]
 \title{Linear Regression}
 \author{Prof. Alessandro Lucantonio}
 \institute{Aarhus University - Department of Mechanical and Production Engineering}
@@ -22,23 +23,23 @@
 		\frametitle{Weight-Height example}
 		Dataset: heights and weights of different people.
 		
-		Task: build a model that predict the height given the weight. 
+		Task: build a model that predicts the height given the weight. 
 		
 		\begin{figure}
 			\centering
 			\includegraphics[scale=0.5]{images/linear_regression_data}
-			\caption{Data plot}
+			\caption{Plot of the dataset}
 		\end{figure}
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{A solution - Linear regression model}
-		Some remarks on data.
+		\frametitle{A solution - Linear Regression model}
+		Remarks:
 		\begin{itemize}
 			\item Regression problem (continuous output).
-			\item Data with different order of magnitude.
+			\item Data with different orders of magnitude.
 		\end{itemize}
-		A possible solution to this problem is represented by \textbf{linear regression} (LR).
+		A possible solution to this problem may be represented by a linear model (represented in red in the figure below). This learning algorithm is called \textbf{Linear Regression} (LR).
 		\begin{figure}
 			\centering
 			\includegraphics[scale=0.4]{images/linear_regression_fit}
@@ -50,74 +51,71 @@
 		\frametitle{General ingredients}
 		Notation:
 		\begin{itemize}
-			\item $x$: a data sample.
-			\item $y$: the data target corresponding to $x$
-			\item $N$: number of data.
+			\item $x^i$: a data sample.
+			\item $y^i$: the data target corresponding to $x$
+			\item $N$: number of samples.
 		\end{itemize}
 	
 		\vspace{5 mm}
 		
-		Model/hypothesis: $h_{\bm{w}}(x) = w_1x + w_0$, where $\bm{w} = [w_0, w_1]$ is the vector of parameter that has to be learned.
+		Model/hypothesis: $h_{\bm{w}}(x^i) = w_1x^i + w_0$, where $\bm{w} = [w_0, w_1]$ is the vector of parameter that has to be learned.
 		
-		In our example, $x$ is the weight of a single sample and $h_{\bm{w}}(x)$ corresponds to the prediction of its height. 
-		
-		\vspace{5 mm}
-		
-		Usually the vector $\bm{w}$ is called \textbf{weights vector} and the set $\mathcal{H}:= \{h_{\bm{w}}| \bm{w} \in \mathbb{R}^2\}$ is called \textbf{hypothesis space}.
+		In our example, $x^i$ is the weight of a single sample and $h_{\bm{w}}(x^i)$ corresponds to the prediction of its height. 
 		
 		\vspace{5 mm}
 		
-		How to learn $w$ from data?
+		The set $\mathcal{H}:= \{h_{\bm{w}}| \bm{w} \in \mathbb{R}^2\}$ is called \textbf{hypothesis space}.
+		
+		\vspace{5 mm}
+		
+		How to learn $\bm{w}$ from data?
 		
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{Mean squared error (MSE)}
-		
-		
-		Given a training sample $x_i$ and a model $h_{\bm{w}}$ we can predict the target computing $h_{\bm{w}}(x_i)$. To evaluate how good is the prediction we compute the error $(h_{\bm{w}}(x_i) - y_i)^2$.
+		\frametitle{Performance measure: Mean Squared Error (MSE)}
+		To evaluate how good is the prediction we compute the error $(h_{\bm{w}}(x_i) - y_i)^2$.
 		
 		\vspace{5 mm}
 		
-		$(h_{\bm{w}}(x_i) - y_i)^2 \geq 0$ and $(h_{\bm{w}}(x_i) - y_i)^2 = 0$ if and only if $h_{\bm{w}}(x_i) = y_i$. The \textbf{mean squared error} (MSE) is:
+		Notice that: $(h_{\bm{w}}(x_i) - y_i)^2 \geq 0$ and $(h_{\bm{w}}(x_i) - y_i)^2 = 0$ if and only if $h_{\bm{w}}(x_i) = y_i$. The \textbf{mean squared error} (MSE) is:
 		$$E({\bm{w}}) := \frac{1}{N} \sum_{i=1}^{N} (h_{\bm{w}}(x_i) - y_i)^2.$$
 		
-		To find the best model we minimize the training error, hence in this case the MSE.
+		To find the parameters of the best model we minimize the MSE.
 		
 		$$\bm{w} \in \argmin_{\tilde{\bm{w}} \in \mathbb{R}^2} E(\tilde{\bm{w}}).$$
 		
 	\end{frame}
 
 	\begin{frame}
+		\frametitle{MSE - Visualization}
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.5]{images/mse}
+		\end{figure}
+	\end{frame}
+
+	\begin{frame}
 		\frametitle{$n$-dimensional LR}
 		\textsl{Dataset samples}.
 		
-		Previous case: $x \in \mathbb{R}, y \in \mathbb{R}$.
+		Previous case: $x^i \in \mathbb{R}, y^i \in \mathbb{R}$.
 		
 		\vspace{1 mm}
 		
-		Now:  $\bm{x} \in \mathbb{R}^n, y \in \mathbb{R}$.
+		Now:  $\bm{x}^i \in \mathbb{R}^n, y^i \in \mathbb{R}$.
 		
 		Notation: $x^i_j$ is the $j$-th coordinate of the $i$-th sample.
 		
 		\vspace{5 mm}
 		
-		\textsl{Hypothesis}.
+		\textsl{Candidate hypothesis}.
 		
-		Previous case: 
-		\begin{equation*}
-			h_{w}(x) = w_1x + w_0,
-		\end{equation*}
-		where $w = [w_0, w_1]$.
-		
-		\vspace{1 mm}
-		
-		Now: 
 		\begin{align*}
 			h_{\bm{w}}(\bm{x}) &= w_{n}x_n + w_{n-1}x_{n-1} + \dots + w_1 x_1 + w_0\\
 			&= \sum_{i=0}^n w_i \tilde{x}_i = \bm{w}^T \tilde{\bm{x}},\\
 		\end{align*}
-		where $\bm{w} = [w_0, \dots, w_n]$ and $\tilde{\bm{x}} = [1, x_1, \dots, x_n]$.
+		where $\bm{w} = [w_0, \dots, w_n]^T$ and $\tilde{\bm{x}} = [1, x_1, \dots, x_n]^T$.
 		
 	\end{frame}
 
@@ -125,14 +123,6 @@
 		\frametitle{n-dimensional LR}
 		\textsl{MSE}.
 		
-		Previous case: 
-		\begin{equation*}
-			E(\bm{w}) = \frac{1}{N} \sum_{i=1}^{N} (h_{\bm{w}}(x_i) - y_i)^2.
-		\end{equation*}
-		
-		\vspace{1 mm}
-		
-		Now: 
 		\begin{align*}
 			E(\bm{w}) &= \frac{1}{N} \sum_{i=1}^{N} (h_w(\bm{x}^i) - y^i)^2\\
 			&= \frac{1}{N} (\mathsf{X} \bm{w} - \bm{y})^T (\mathsf{X}\bm{w} - \bm{y})\\
@@ -151,6 +141,7 @@
 			y_N
 		\end{bmatrix}.
 		\end{equation*}
+	In particular, $\mathsf{X} \in \mathbb{R}^{N \times (n+1)}$ and $y \in \mathbb{R}^N$.
 	\end{frame}
 
 	\begin{frame}
@@ -159,19 +150,19 @@
 		
 		\vspace{5mm}
 		
-		Main idea: the gradient of a scalar field represent geometrically the direction with maximum slope. Hence, following the opposite direction of the gradient lead us to get closer to the minimum of the function.
+		Main idea: geometrically, the gradient of a scalar function represents the direction of maximum slope. Hence, following the direction opposite to the gradient leads closer to the minimum of the function.
 		
 		\vspace{5mm}
 		
 		Formally:
 		\begin{itemize}
-			\item Start with a random $\bm{w}^0$.
+			\item Start with an initial guess $\bm{w}^0$ (random).
 			\item For $j \geq 0$, update $\bm{w}^{j+1} := \bm{w}^{j} + \bm{d}^j$, where $\bm{d}^j$ is such that
 			\begin{equation*}
 				E(\bm{w}^{j+1}) \leq E(\bm{w}^j) 
 			\end{equation*}
 		\end{itemize}
-		Gradient descent: $\bm{d}^j = - \alpha \nabla E(\bm{w}^j)$. $\alpha$ is called \textbf{learning rate}.
+		Gradient descent: $\bm{d}^j = - \alpha \nabla E(\bm{w}^j)$; $\alpha>0$ is called \textbf{learning rate}.
 	\end{frame}
 
 	\begin{frame}
@@ -217,11 +208,11 @@
 		\vspace{5mm}
 		
 		
-		The classical gradient descent update rule is called \textbf{batch version}. We update the weights vector computing the gradient of the entire cost function $E(\bm{w})$. However, in some cases computing $\nabla E(\bm{w})$ is impossible, due to the huge amount of time to compute it. 
+		The classical gradient descent update rule, i.e. update the weights vector computing the gradient of the entire cost function $E(\bm{w})$, is called \textbf{batch version}. However, for large number of samples ($N$) computing $\nabla E(\bm{w})$ is very time consuming.
 		
 		\vspace{5mm}
 		
-		To speed-up the update rule we can imagine that $\nabla E_i(\bm{w})$ represent a primitive approximation of $\nabla E(\bm{w})$. This is the idea behind the so called \textbf{Stochastic Gradient Descent} (SGD) or \textbf{online version}.
+		To speed-up the update rule we approximate $\nabla E(\bm{w})$ with $\nabla E_i(\bm{w})$. This is the idea behind the so-called \textbf{Stochastic Gradient Descent} (SGD) or \textbf{online version}.
 		
 		\vspace{5mm}
 		
