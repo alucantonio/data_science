@@ -251,9 +251,10 @@
 			\item SGD: very fast, stochastic approximation of the gradient implies possible instability (Zig-zag effect)
 			\item Mini-Batch: a trade-off (parallelism available).
 		\end{itemize}
+	In practice, through SGD and mini-batch we may not even reach the minimum, but it is enough to get close to it.
 		\begin{figure}
 			\centering
-			\includegraphics[scale=0.4]{images/gd_mb_sgd}
+			\includegraphics[scale=0.35]{images/gd_mb_sgd}
 			\caption{Batch vs SGD vs Mini-batch}
 		\end{figure}
 	
@@ -283,12 +284,30 @@
 	\end{frame}
 
 	\begin{frame}
+		\frametitle{Tips and Tricks - Invertibility of $\mathsf{X}^T\mathsf{X}$}
+		
+		Invertibility of $\mathsf{X}^T\mathsf{X} \iff$ columns of $X$ linearly independent (preprocessing information).
+		
+		\vspace{5mm}
+		
+		What happens when $\mathsf{X}^T\mathsf{X}$ is not invertible?
+		
+		\vspace{5mm}
+		
+		If two columns are linearly dependent, then those features are correlated (\textbf{redundant}).
+		
+		\vspace{5mm}
+		
+		Solution: discard one of those features.
+	\end{frame}
+
+	\begin{frame}
 		\frametitle{Normal equation vs gradient descent}
 		Normal equation:
 		\begin{itemize}
 			\item No hyperparameter (explicit solution).
 			\item No need to iterate.
-			\item $\mathcal{O}(n^3)$, hence slow when $n$ is large.
+			\item $\mathcal{O}(N^3)$, since this is the cost to invert a dense matrix. In particular, it is slow when $N$ is large.
 		\end{itemize}
 	
 		\vspace{5mm}
@@ -297,9 +316,10 @@
 		\begin{itemize}
 			\item Need to choose the learning rate $\alpha$.
 			\item Needs many iterations.
-			\item $\mathcal{O}(kn^2)$, hence fast when $n$ is large.
+			\item $\mathcal{O}(N^2)$, hence faster when $N$ is large.
 		\end{itemize}
 	\end{frame}
+
 
 	\begin{frame}
 		\frametitle{Tips and Tricks - Standardization}
@@ -310,11 +330,11 @@
 		\end{itemize}
 		Common techniques:
 		\begin{itemize}
-			\item \textbf{Feature scaling}. Compute the max $\bm{M}$ and the min $\bm{m}$ data value. Then normalize each feature as follows
+			\item \textbf{Feature scaling}. Compute the max $\bm{M} := [\max_i x^i_j]_j$ and the min $\bm{m} := [\min_i x^i_j]_j$ data value. Then normalize each feature as follows
 			\begin{equation*}
 				\bm{x}_{\text{norm}}^i = \frac{\bm{x}^i - \bm{m}}{\bm{M} - \bm{m}}
 			\end{equation*} 
-			\item \textbf{Mean normalization}. Compute mean $\mu$ and standard deviation $\sigma$ of the data. Then normalize each feature as follows
+			\item \textbf{Mean normalization}. Compute mean $\bm{\mu}$ $(\mu_j := \mathbb{E}[[x^i_j]_i])$ and standard deviation $\bm{\sigma}$ $(\sigma_j := \sqrt{\text{Var}[[x^i_j]_i]})$ of the data. Then normalize each feature as follows
 			\begin{equation*}
 				\bm{x}_{\text{norm}}^i = \frac{\bm{x}^i -\bm{\mu}}{\bm{\sigma}} 
 			\end{equation*}
@@ -331,30 +351,10 @@
 		
 	\end{frame}
 
-	\begin{frame}
-		\frametitle{Tips and Tricks - Invertibility of $\mathsf{X}^T\mathsf{X}$}
-		What happens when $\mathsf{X}^T\mathsf{X}$ is not invertible?
-		
-		Invertibility of $\mathsf{X}^T\mathsf{X} =$ column of $X$ linearly independent (preprocessing information)
-		
-		\vspace{5mm}
-		
-		If a column is linearly dependent to the other then a feature is correlated with others (redundant feature).
-		
-		\vspace{5mm}
-		
-		Solution: discard that feature. The information carried by that feature is contained in some of the others. 
-	\end{frame}
+
 
 	\begin{frame}
 		\frametitle{Polynomial regression (PR)}
-		LR corresponds to linear hypothesis, i.e. of the form
-		\begin{equation*}
-			h_{\bm{w}}(\bm{x}) = \bm{w}^T \bm{x}
-		\end{equation*}
-		
-		\vspace{5mm}
-		
 		PR corresponds to polynomial hypothesis, i.e. of the form
 		\begin{equation*}
 			h_{\bm{w}}(\bm{x}) = \sum_{j=0}^n w_j x^j_j.
