@@ -51,16 +51,16 @@
 		\frametitle{General ingredients}
 		Notation:
 		\begin{itemize}
-			\item $x^i$: a data sample.
-			\item $y^i$: the data target corresponding to $x$
+			\item $x^{(i)}$: a data sample.
+			\item $y^{(i)}$: the data target corresponding to $x$
 			\item $N$: number of samples.
 		\end{itemize}
 	
 		\vspace{5 mm}
 		
-		Model/hypothesis: $h_{\bm{w}}(x^i) = w_1x^i + w_0$, where $\bm{w} = [w_0, w_1]$ is the vector of parameter that has to be learned.
+		Model/hypothesis: $h_{\bm{w}}(x^{(i)}) = w_1x^{(i)} + w_0$, where $\bm{w} = [w_0, w_1]$ is the vector of parameter that has to be learned.
 		
-		In our example, $x^i$ is the weight of a single sample and $h_{\bm{w}}(x^i)$ corresponds to the prediction of its height. 
+		In our example, $x^{(i)}$ is the weight of a single sample and $h_{\bm{w}}(x^{(i)})$ corresponds to the prediction of its height. 
 		
 		\vspace{5 mm}
 		
@@ -74,12 +74,12 @@
 
 	\begin{frame}
 		\frametitle{Performance measure: Mean Squared Error (MSE)}
-		To evaluate how good is the prediction we compute the error $(h_{\bm{w}}(x_i) - y_i)^2$.
+		To evaluate how good is the prediction we compute the error $(h_{\bm{w}}(x^{(i)}) - y^{(i)})^2$.
 		
 		\vspace{5 mm}
 		
-		Notice that: $(h_{\bm{w}}(x_i) - y_i)^2 \geq 0$ and $(h_{\bm{w}}(x_i) - y_i)^2 = 0$ if and only if $h_{\bm{w}}(x_i) = y_i$. The \textbf{mean squared error} (MSE) is:
-		$$E({\bm{w}}) := \frac{1}{N} \sum_{i=1}^{N} (h_{\bm{w}}(x_i) - y_i)^2.$$
+		Notice that: $(h_{\bm{w}}(x^{(i)}) - y^{(i)})^2 \geq 0$ and $(h_{\bm{w}}(x^{(i)}) - y^{(i)})^2 = 0$ if and only if $h_{\bm{w}}(x^{(i)}) = y^{(i)}$. The \textbf{mean squared error} (MSE) is:
+		$$E({\bm{w}}) := \frac{1}{N} \sum_{i=1}^{N} (h_{\bm{w}}(x^{(i)}) - y^{(i)})^2.$$
 		
 		To find the parameters of the best model we minimize the MSE.
 		
@@ -99,13 +99,13 @@
 		\frametitle{$n$-dimensional LR}
 		\textsl{Dataset samples}.
 		
-		Previous case: $x^i \in \mathbb{R}, y^i \in \mathbb{R}$.
+		Previous case: $x^{(i)} \in \mathbb{R}, y^{(i)} \in \mathbb{R}$.
 		
 		\vspace{1 mm}
 		
-		Now:  $\bm{x}^i \in \mathbb{R}^n, y^i \in \mathbb{R}$.
+		Now:  $\bm{x}^{(i)} \in \mathbb{R}^n, y^{(i)} \in \mathbb{R}$.
 		
-		Notation: $x^i_j$ is the $j$-th coordinate of the $i$-th sample.
+		Notation: $x^{(i)}_j$ is the $j$-th coordinate of the $i$-th sample.
 		
 		\vspace{5 mm}
 		
@@ -124,7 +124,7 @@
 		\textsl{MSE}.
 		
 		\begin{align*}
-			E(\bm{w}) &= \frac{1}{N} \sum_{i=1}^{N} (h_w(\bm{x}^i) - y^i)^2\\
+			E(\bm{w}) &= \frac{1}{N} \sum_{i=1}^{N} (h_w(\bm{x}^{(i)}) - y^{(i)})^2\\
 			&= \frac{1}{N} (\mathsf{X} \bm{w} - \bm{y})^T (\mathsf{X}\bm{w} - \bm{y})\\
 			&= \frac{1}{N} ||\mathsf{X}\bm{w} - \bm{y}||^2
 		\end{align*}
@@ -132,16 +132,16 @@
 		where
 		\begin{equation*}
 			\mathsf{X} := \begin{bmatrix}
-				\tilde{\bm{x}}^1\\
+				\tilde{\bm{x}}^{(1)}\\
 				\vdots\\
-				\tilde{\bm{x}}^N 
+				\tilde{\bm{x}}^{(N)}
 			\end{bmatrix} \quad \bm{y} = \begin{bmatrix}
-			y_1 \\
+			y^{(1)} \\
 			\vdots\\
-			y_N
+			y^{(N)}
 		\end{bmatrix}.
 		\end{equation*}
-	In particular, $\mathsf{X} \in \mathbb{R}^{N \times (n+1)}$ and $y \in \mathbb{R}^N$.
+	In particular, $\mathsf{X} \in \mathbb{R}^{N \times (n+1)}$ and $\bm{y} \in \mathbb{R}^N$.
 	\end{frame}
 
 	\begin{frame}
@@ -230,16 +230,24 @@
 		\textbf{Stochastic Gradient Descent} (SGD or online)
 		\begin{itemize}
 			\item Start with a random $\bm{w}^0$.
-			\item For $j \geq 0$ and for each pattern $1\leq i \leq N$ update $\bm{w}^{j+1} := \bm{w}^{j} - \alpha \nabla E_i(\bm{w}^j)$.
+			\item For each epoch $j \geq 0$:
+			\begin{itemize}
+				\item shuffle the dataset to prevent cycles;
+				\item for each $1\leq i \leq N$ update $\bm{w} := \bm{w} - \alpha \nabla E_i(\bm{w})$.
+			\end{itemize}
 		\end{itemize}
 	
 		\textbf{Mini-Batch}. Fix an integer $1 \leq \text{mb} \leq N$(mini-batch size).
 		\begin{itemize}
 			\item Start with a random $\bm{w}^0$.
-			\item For $j \geq 0$ and for each pattern $0 \leq i < \frac{N}{\text{mb}}$ update
-			\begin{equation*}
-				\bm{w}^{j+1} := \bm{w}^{j} - \alpha \nabla \sum_{k=i\cdot\text{mb} + 1}^{(i+1)\cdot\text{mb}}E_k(\bm{w}^j)
-			\end{equation*}
+			\item For each epoch $j \geq 0$:
+			\begin{itemize}
+				\item shuffle the dataset to prevent cycles;
+				\item for each $0 \leq i < \frac{N}{\text{mb}}$ update
+				\begin{equation*}
+					\bm{w} := \bm{w} - \alpha \nabla \sum_{k=i\cdot\text{mb} + 1}^{(i+1)\cdot\text{mb}}E_k(\bm{w}).
+				\end{equation*}
+			\end{itemize} 
 		\end{itemize}
 		
 	\end{frame}
@@ -326,17 +334,17 @@
 		General (not only for LR): features must be on a similar scale!
 		\begin{itemize}
 			\item Speed up the convergence of gradient descent.
-			\item Try to have (on average) $-1 \leq x^i \leq 1$.
+			\item Try to have (on average) $-1 \leq \bm{x}^{(i)} \leq 1$.
 		\end{itemize}
 		Common techniques:
 		\begin{itemize}
-			\item \textbf{Feature scaling}. Compute the max $\bm{M} := [\max_i x^i_j]_j$ and the min $\bm{m} := [\min_i x^i_j]_j$ data value. Then normalize each feature as follows
+			\item \textbf{Feature scaling}. Compute the max $\bm{M} := [\max_i x^{(i)}_j]_j$ and the min $\bm{m} := [\min_i x^{(i)}_j]_j$ data value. Then normalize each feature as follows
 			\begin{equation*}
-				\bm{x}_{\text{norm}}^i = \frac{\bm{x}^i - \bm{m}}{\bm{M} - \bm{m}}
+				\bm{x}_{\text{norm}}^i = \frac{\bm{x}^{(i)} - \bm{m}}{\bm{M} - \bm{m}}
 			\end{equation*} 
-			\item \textbf{Mean normalization}. Compute mean $\bm{\mu}$ $(\mu_j := \mathbb{E}[[x^i_j]_i])$ and standard deviation $\bm{\sigma}$ $(\sigma_j := \sqrt{\text{Var}[[x^i_j]_i]})$ of the data. Then normalize each feature as follows
+			\item \textbf{Mean normalization}. Compute mean $\bm{\mu}$ $(\mu_j := \mathbb{E}[[x^{(i)}_j]_i])$ and standard deviation $\bm{\sigma}$ $(\sigma_j := \sqrt{\text{Var}[[x^{(i)}_j]_i]})$ of the data. Then normalize each feature as follows
 			\begin{equation*}
-				\bm{x}_{\text{norm}}^i = \frac{\bm{x}^i -\bm{\mu}}{\bm{\sigma}} 
+				\bm{x}_{\text{norm}}^{(i)} = \frac{\bm{x}^{(i)} -\bm{\mu}}{\bm{\sigma}} 
 			\end{equation*}
 		\end{itemize}
 	\end{frame}
@@ -389,49 +397,46 @@
 			\includegraphics[scale=0.35]{images/overfitting_poly}
 			\caption{Underfitting (degree 1), good fitting (degree 4), overfitting (degree 15).}
 		\end{figure}
+	
+	Overfitting can be countered in many ways, including:
+	
+	\begin{itemize}
+		\item Validation, the true core of Machine Learning;
+		\item Regularization.
+	\end{itemize}
 	\end{frame}
 
-	\begin{frame}
-		\frametitle{How to counter overfitting}
-		
-		Overfitting can be countered in many ways.
-		
-		\vspace{5mm}
-		
-		\begin{itemize}
-			\item Validation, the true core of Machine Learning.
-			\item Early stopping.
-			\item Ensembling.
-			\item Regularization.
-		\end{itemize}
-	
-		\vspace{5mm}
-	
-		Now we focus on regularization and the general intuition behind it, lately in this course we are going to address the other points.
-	\end{frame}
 
 	\begin{frame}
-		\frametitle{Tikhonov regularization}
+		\frametitle{Regularization}
 		
-		Overfitting phenomenon is highly correlated with complex models. To avoid complex models, the idea is to penalize models with large weights. One way to do it is to consider the following cost function
+		Overfitting is highly correlated with ``complex" models. To avoid ``complex" models, the idea is to penalize models with large weights. One way to do it is to consider the following cost function
 		
 	\vspace{5mm}
 	
 		\begin{equation*}
-			E_{r}(\bm{w}) = E(\bm{w}) + \underbrace{\lambda ||\bm{w}||^2}_{R_{\lambda}(\bm{w})}.
+			E_{r}(\bm{w}) = E(\bm{w}) + R_{\lambda}(\bm{w}).
 		\end{equation*}
 		
 	\vspace{5mm}
 	
-	$R_{\lambda}$ is called \textsl{Tikhonov regularization} (or $L^2$ regularization). More in general, we will call \textsl{regularization term} the term added to the error function involving the type of regularization chosen.
-	
-	\vspace{5mm}
-	
+	$R_{\lambda}$ is called \textsl{regularization term}.
 	$\lambda > 0$ is an hyperparameter that must be chosen in the model selection phase.
+	
+	Most common regularization techniques:
+	\begin{itemize}
+		\item Tikhonov regularization: $R_{\lambda}(\bm{w}) = \lambda ||w||_2$. Tends to bring all the weights to small values.
+		\item Lasso: $R_{\lambda}(\bm{w}) = \lambda ||w||_1$. Tends to bring some weights to $0$ (feature selection).
+	\end{itemize}
 	\end{frame}
 
 	\begin{frame}
 		\frametitle{LR with Tikhonov regularization}
+		Cost function (with no regularization):
+		\begin{equation*}
+			E(\bm{w}) = \frac{1}{N} ||\mathsf{X} \bm{w} - \bm{y}||^2.
+		\end{equation*}
+		
 		New cost function:
 		\begin{equation*}
 			E_{r}(\bm{w}) = E(\bm{w}) + \lambda ||\bm{w}||^2.
@@ -448,14 +453,5 @@
 		\end{equation*}
 	
 	Note that in this case $\mathsf{X}^T\mathsf{X} + \lambda \mathsf{I}$ is \textsl{always} invertible (why? :) )
-	\end{frame}
-
-	\begin{frame}
-		\frametitle{Most common regularization techniques}
-		\begin{itemize}
-			\item Tikhonov regularization: $R_{\lambda}(\bm{w}) = \lambda ||w||_2$. Tends to bring all the weights to small values.
-			\item Lasso: $R_{\lambda}(\bm{w}) = \lambda ||w||_1$. Tends to bring some weights to $0$ (feature selection).
-			\item Elastic net: $R_{\lambda}(\bm{w}) = \lambda_1 ||w||_1 + \lambda_2 ||w||_2$.
-		\end{itemize}
 	\end{frame}
 \end{document}
