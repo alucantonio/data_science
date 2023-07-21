@@ -145,6 +145,24 @@
 	\end{frame}
 
 	\begin{frame}
+		\frametitle{Coefficient of determination}
+		Idea: $\mathsf{X}$ and $\bm{y}$ can be thought as two random variables.
+		
+		\vspace{5mm}
+		
+		Let $\bm{\epsilon} := \bm{y} - \mathsf{X}\bm{w}$ and $\sigma_{\bm{\epsilon}}:= \sqrt{\text{Var}(\bm{\epsilon})}$ its standard deviation. Similarly, $\sigma_{\bm{y}}:= \sqrt{\text{Var}(\bm{y})}$.  The quantity
+		\begin{equation*}
+			R^2 := 1 - \frac{\sigma_{\bm{\epsilon}}}{\sigma_{\bm{y}}}
+		\end{equation*}
+		is called \textsl{coefficient of determination}.
+		
+		\vspace{5mm}
+		
+		Best case scenario: $\sigma_{\bm{\epsilon}} = 0$, hence $R^2 = 1$.
+		
+	\end{frame}
+
+	\begin{frame}
 		\frametitle{Spot the minimum - Gradient descent}
 		How to find $\bm{w} \in \argmin_{\tilde{\bm{w}} \in \mathbb{R}^2} E(\tilde{\bm{w}})$?
 		
