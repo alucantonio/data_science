@@ -13,24 +13,70 @@ To run the Python scripts contained in the repository, first you need to create 
 [`conda`](https://conda.io/projects/conda/en/latest/index.html) environment. We recommend using
 [`mamba`](https://mamba.readthedocs.io/en/latest/) as a package manager.
 
-To install `mamba`, follow the instructions reported on
-[this](https://github.com/conda-forge/miniforge#mambaforge) page (you need to run the
-commands from a shell).
+### Windows
+- Download the latest `mambaforge` installer from
+[here](https://github.com/conda-forge/miniforge#mambaforge) (click on the link
+`Mambaforge-Windows-x86_64`).
+- Run the installer and leave the default options during the
+installation procedure.
+**Warning**: you *cannot* use the default settings (in particular, the installation
+path) if your username contains spaces. In this case, open `File Explorer` and create a new
+directory *without spaces* (e.g. "mamba") under `C:\`. Then, run the installer and
+choose this path as a destination folder. You may also need to move the directory where
+you unzipped the contents of this repository in a location such that the path does not
+contain spaces. 
+- From the *Start* menu, launch the `Miniforge Prompt`.
+- Navigate into the directory where you unzipped the contents of this repository.
+- Execute the command
+    ```
+    mamba env create -f environment.yml
+    ```
+    to create the `datascience` environment and install all the Python libraries required for this
+    course. 
+- Activate the new environment to start coding and running the Python scripts/notebooks
+  contained in this repository:
+    ```
+    mamba activate datascience
+    ```
+    (this step must be done every time you open a new `Miniforge Prompt` in order to use
+    the scripts of this repository.)
 
-Then, from the shell enter the directory of the repository and create a new `conda` environment:
+### MacOS / Linux
+- Open a terminal (e.g. `Terminal` under MacOS) and execute the following commands to
+  download the installer using curl or wget and start the installation, e.g.
 ```
-mamba env create -f environment.yml
+curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
+bash Mambaforge-$(uname)-$(uname -m).sh
 ```
-You can then *activate* the environment
+or
 ```
-mamba activate datascience
+wget "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
+bash Mambaforge-$(uname)-$(uname -m).sh
 ```
-and run Python scripts within such an environment.
+- From the command prompt, enter the directory where you unzipped the contents of the repository.
+- Execute the command
+    ```
+    mamba env create -f environment.yml
+    ```
+    to create the `datascience` environment and install all the Python libraries required for this
+    course. 
+- Activate the new environment to start coding and running the Python scripts/notebooks
+  contained in this repository:
+    ```
+    mamba activate datascience
+    ```
+    (this step must be done every time you open a new terminal in order to use
+    the scripts of this repository.)
 
 ## Using Jupyter notebooks
 
-To edit/run [`jupyter`](https://jupyter.org/) notebooks (*.ipynb), start [`JupyterLab`](https://jupyter.org/)
+To edit/run [`jupyter`](https://jupyter.org/) notebooks (*.ipynb), start
+[`JupyterLab`](https://jupyter.org/) by executing the following command from the command prompt
 ```
 jupyter lab
 ```
-and use the web interface to open notebooks.
+and use the web interface to open notebooks. Press `CTRL+C` while on the prompt to
+terminate `JupyterLab`.
+
+## Contacts
+Prof. Alessandro Lucantonio (a.lucantonio@mpe.au.dk)
