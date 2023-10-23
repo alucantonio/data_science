@@ -8,10 +8,10 @@
 \DeclareMathOperator*{\argmin}{arg\,min}
 
 \setbeamertemplate{footline}[frame number]
-\title{Linear Regression}
+\title{Regression and Gradient Descent}
 \author{Prof. Alessandro Lucantonio}
-\institute{Aarhus University - Department of Mechanical and Production Engineering}
-\date{?/?/2023}
+\institute{Aarhus University}
+\date{24/10/2023}
 
 \begin{document}
 	
@@ -20,8 +20,7 @@
 	\section{Linear regression with one variable}
 
 	\begin{frame}
-		\frametitle{Weight-Height example}
-		Dataset: heights and weights of different people.
+		\frametitle{Weight-Height dataset}
 		
 		Task: build a model that predicts the height given the weight. 
 		
@@ -39,28 +38,31 @@
 			\item Regression problem (continuous output).
 			\item Data with different orders of magnitude.
 		\end{itemize}
-		A possible solution to this problem may be represented by a linear model (represented in red in the figure below). This learning algorithm is called \textbf{Linear Regression} (LR).
+		A possible solution to this problem is a linear model (red line in the figure below). This learning algorithm is called \textbf{Linear Regression} (LR).
+		\vspace{-5mm}
 		\begin{figure}
 			\centering
 			\includegraphics[scale=0.4]{images/linear_regression_fit}
-			\caption{Trained model (in red)}
+			\caption{Linear regression model.}
 		\end{figure}
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{General ingredients}
+		\frametitle{Linear Regression: main ingredients}
 		Notation:
 		\begin{itemize}
-			\item $x^{(i)}$: a data sample.
-			\item $y^{(i)}$: the data target corresponding to $x$
+			\item $x^{(i)}$: a data sample (weight of the $i$-th person).
+			\item $y^{(i)}$: the target corresponding to $x^{(i)}$ (height).
 			\item $N$: number of samples.
 		\end{itemize}
 	
 		\vspace{5 mm}
 		
-		Model/hypothesis: $h_{\bm{w}}(x^{(i)}) = w_1x^{(i)} + w_0$, where $\bm{w} = [w_0, w_1]$ is the vector of parameter that has to be learned.
-		
-		In our example, $x^{(i)}$ is the weight of a single sample and $h_{\bm{w}}(x^{(i)})$ corresponds to the prediction of its height. 
+		\textbf{Model/hypothesis}: 
+		\begin{align*}
+			h_{\bm{w}}(x^{(i)}) = w_1x^{(i)} + w_0
+		\end{align*}
+		where $\bm{w} = [w_0, w_1]^T$ is the vector of parameters to be learned.
 		
 		\vspace{5 mm}
 		
@@ -74,64 +76,50 @@
 
 	\begin{frame}
 		\frametitle{Performance measure: Mean Squared Error (MSE)}
-		To evaluate how good is the prediction we compute the error $(h_{\bm{w}}(x^{(i)}) - y^{(i)})^2$.
-		
-		\vspace{5 mm}
-		
-		Notice that: $(h_{\bm{w}}(x^{(i)}) - y^{(i)})^2 \geq 0$ and $(h_{\bm{w}}(x^{(i)}) - y^{(i)})^2 = 0$ if and only if $h_{\bm{w}}(x^{(i)}) = y^{(i)}$. The \textbf{mean squared error} (MSE) is:
+		To evaluate how good is the prediction we compute the \textbf{Mean Squared Error} (MSE) is:
 		$$E({\bm{w}}) := \frac{1}{N} \sum_{i=1}^{N} (h_{\bm{w}}(x^{(i)}) - y^{(i)})^2.$$
 		
-		To find the parameters of the best model we minimize the MSE.
+		To find the ``best" set of parameters, we minimize the MSE:
 		
 		$$\bm{w} \in \argmin_{\tilde{\bm{w}} \in \mathbb{R}^2} E(\tilde{\bm{w}}).$$
 		
 	\end{frame}
 
-	\begin{frame}
-		\frametitle{MSE - Visualization}
-		\begin{figure}
-			\centering
-			\includegraphics[scale=0.5]{images/mse}
-		\end{figure}
-	\end{frame}
+%	\begin{frame}
+%		\frametitle{MSE - Visualization}
+%		\begin{figure}
+%			\centering
+%			\includegraphics[scale=0.5]{images/mse}
+%		\end{figure}
+%	\end{frame}
 
 	\begin{frame}
-		\frametitle{$n$-dimensional LR}
-		\textsl{Dataset samples}.
+		\frametitle{Multiple-feature Linear Regression}
 		
-		Previous case: $x^{(i)} \in \mathbb{R}, y^{(i)} \in \mathbb{R}$.
-		
-		\vspace{1 mm}
-		
-		Now:  $\bm{x}^{(i)} \in \mathbb{R}^n, y^{(i)} \in \mathbb{R}$.
-		
-		Notation: $x^{(i)}_j$ is the $j$-th coordinate of the $i$-th sample.
-		
-		\vspace{5 mm}
-		
-		\textsl{Candidate hypothesis}.
-		
-		\begin{align*}
-			h_{\bm{w}}(\bm{x}) &= w_{n}x_n + w_{n-1}x_{n-1} + \dots + w_1 x_1 + w_0\\
-			&= \sum_{i=0}^n w_i \tilde{x}_i = \bm{w}^T \tilde{\bm{x}},\\
-		\end{align*}
-		where $\bm{w} = [w_0, \dots, w_n]^T$ and $\tilde{\bm{x}} = [1, x_1, \dots, x_n]^T$.
+		\begin{itemize}
+			\item Dataset: $\bm{x}^{(i)} \in \mathbb{R}^n, y^{(i)} \in \mathbb{R}$, where
+			$x^{(i)}_j$ is the $j$-th feature of the $i$-th sample and $n$ is the number of features.
+			\item Hypothesis: 
+			\begin{align*}
+				h_{\bm{w}}(\bm{x}^{(i)}) &= w_{n}x^{(i)}_n + w_{n-1}x^{(i)}_{n-1} + \dots + w_1 x^{(i)}_1 + w_0\\
+				&= \sum_{i=0}^n w_i \tilde{x}^{(i)}_i = \bm{w}^T \tilde{\bm{x}}^{(i)},\\
+			\end{align*}
+			where $\bm{w} = [w_0, \dots, w_n]^T$ and $\tilde{\bm{x}}^{(i)} = [1, x^{(i)}_1, \dots, x^{(i)}_n]^T$.
+		\end{itemize}
 		
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{n-dimensional LR}
-		\textsl{MSE}.
-		
+		\frametitle{Multiple-feature Linear Regression - MSE}
+		\textsl{MSE}:
 		\begin{align*}
-			E(\bm{w}) &= \frac{1}{N} \sum_{i=1}^{N} (h_w(\bm{x}^{(i)}) - y^{(i)})^2\\
+			E(\bm{w}) &= \frac{1}{N} \sum_{i=1}^{N} (h_{\bm{w}}(\bm{x}^{(i)}) - y^{(i)})^2\\
 			&= \frac{1}{N} (\mathsf{X} \bm{w} - \bm{y})^T (\mathsf{X}\bm{w} - \bm{y})\\
 			&= \frac{1}{N} ||\mathsf{X}\bm{w} - \bm{y}||^2
 		\end{align*}
-		
 		where
 		\begin{equation*}
-			\mathsf{X} := \begin{bmatrix}
+			\mathsf{X} = \begin{bmatrix}
 				\tilde{\bm{x}}^{(1)}\\
 				\vdots\\
 				\tilde{\bm{x}}^{(N)}
@@ -141,7 +129,7 @@
 			y^{(N)}
 		\end{bmatrix}.
 		\end{equation*}
-	In particular, $\mathsf{X} \in \mathbb{R}^{N \times (n+1)}$ and $\bm{y} \in \mathbb{R}^N$.
+	Notice that $\mathsf{X} \in \mathbb{R}^{N \times (n+1)}$ and $\bm{y} \in \mathbb{R}^N$.
 	\end{frame}
 
 	\begin{frame}
@@ -150,11 +138,11 @@
 		
 		\vspace{5mm}
 		
-		Let $\bm{\epsilon} := \bm{y} - \mathsf{X}\bm{w}$ and $\sigma_{\bm{\epsilon}}:= \sqrt{\text{Var}(\bm{\epsilon})}$ its standard deviation. Similarly, $\sigma_{\bm{y}}:= \sqrt{\text{Var}(\bm{y})}$.  The quantity
+		Let $\bm{\epsilon} := \bm{y} - \mathsf{X}\bm{w}$ the vector of the residuals and $\sigma_{\bm{y}}:= \sqrt{\text{Var}(\bm{y})}$ the standard deviation of the targets.  The quantity
 		\begin{equation*}
-			R^2 := 1 - \frac{\sigma_{\bm{\epsilon}}}{\sigma_{\bm{y}}}
+			R^2 := 1 - \frac{||\bm{\epsilon}||^2}{\sigma_{\bm{y}}^2}
 		\end{equation*}
-		is called \textsl{coefficient of determination}.
+		is called the \textsl{coefficient of determination}.
 		
 		\vspace{5mm}
 		
@@ -163,28 +151,30 @@
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{Spot the minimum - Gradient descent}
+		\frametitle{Finding the minimum: Gradient Descent}
 		How to find $\bm{w} \in \argmin_{\tilde{\bm{w}} \in \mathbb{R}^2} E(\tilde{\bm{w}})$?
 		
 		\vspace{5mm}
 		
-		Main idea: geometrically, the gradient of a scalar function represents the direction of maximum slope. Hence, following the direction opposite to the gradient leads closer to the minimum of the function.
+		Main idea: geometrically, the gradient of a scalar function represents the direction of maximum slope. Hence, following the direction opposite to the gradient allows to decrease the value of the function, \textit{i.e.}
+		\begin{equation*}
+			E(\bm{w}^{j+1}) \leq E(\bm{w}^j) 
+		\end{equation*}
 		
 		\vspace{5mm}
 		
 		Formally:
 		\begin{itemize}
-			\item Start with an initial guess $\bm{w}^0$ (random).
+			\item Start with an initial guess $\bm{w}^0$.
 			\item For $j \geq 0$, update $\bm{w}^{j+1} := \bm{w}^{j} + \bm{d}^j$, where $\bm{d}^j$ is such that
-			\begin{equation*}
-				E(\bm{w}^{j+1}) \leq E(\bm{w}^j) 
-			\end{equation*}
+			$$\bm{d}^j = - \alpha \nabla E(\bm{w}^j)$$
+			where $\alpha>0$ is the \textbf{learning rate}.
 		\end{itemize}
-		Gradient descent: $\bm{d}^j = - \alpha \nabla E(\bm{w}^j)$; $\alpha>0$ is called \textbf{learning rate}.
+	
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{Gradient descent - 3D visualization}
+		\frametitle{Gradient Descent - 3D visualization}
 		\begin{figure}
 			\centering
 			\includegraphics[scale=0.4]{images/gradient_descent_3D}
@@ -193,7 +183,7 @@
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{Gradient descent - 2D visualization}
+		\frametitle{Gradient Descent: Effect of the learning rate/1}
 		\begin{figure}
 			\centering
 			\includegraphics[scale=0.3]{images/gradient_descent_1}
@@ -202,7 +192,7 @@
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{Gradient descent - 2D visualization}
+		\frametitle{Gradient Descent: Effect of the learning rate/2}
 		\begin{figure}
 			\centering
 			\includegraphics[scale=0.3]{images/gradient_descent_2}
@@ -211,7 +201,7 @@
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{Gradient descent - 2D visualization}
+		\frametitle{Gradient Descent: Effect of the learning rate/3}
 		\begin{figure}
 			\centering
 			\includegraphics[scale=0.3]{images/gradient_descent_3}
@@ -220,13 +210,10 @@
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{Batch, SGD and Mini-Batch - Intuition}
+		\frametitle{Batch GD, SGD and Mini-Batch GD - Intuition}
 		Notation: $E(\bm{w}) = 1/N \sum_{i=1}^N E_i(\bm{w})$
 		
-		\vspace{5mm}
-		
-		
-		The classical gradient descent update rule, i.e. update the weights vector computing the gradient of the entire cost function $E(\bm{w})$, is called \textbf{batch version}. However, for large number of samples ($N$) computing $\nabla E(\bm{w})$ is very time consuming.
+		The classical gradient descent update rule, \textit{i.e.} update the weights computing the gradient of the entire cost (error) function $E(\bm{w})$, is called \textbf{batch version}. However, for large number of samples ($N$) computing $\nabla E(\bm{w})$ is very time consuming.
 		
 		\vspace{5mm}
 		
@@ -234,33 +221,36 @@
 		
 		\vspace{5mm}
 		
-		A trade-off between GD and SGD is called \textbf{mini-batch version}.
+		A trade-off between batch GD and SGD is called the \textbf{mini-batch} GD.
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{Batch, SGD and Mini-Batch - Formal}
-		\textbf{Batch}
+		\frametitle{Batch GD, SGD and Mini-Batch GD - Algorithms}
+		
+		
+		\textbf{Batch GD}
 		\begin{itemize}
-			\item Start with a random $\bm{w}^0$.
+			\item Start with an initial guess $\bm{w}^0$.
 			\item For $j \geq 0$, update $\bm{w}^{j+1} := \bm{w}^{j} - \alpha \nabla E(\bm{w}^j)$.
 		\end{itemize}
 		
-		\textbf{Stochastic Gradient Descent} (SGD or online)
+		\textbf{SGD} (online)
 		\begin{itemize}
-			\item Start with a random $\bm{w}^0$.
+			\item Start with an initial guess $\bm{w}^0$.
 			\item For each epoch $j \geq 0$:
 			\begin{itemize}
-				\item shuffle the dataset to prevent cycles;
+				\item shuffle the dataset;
 				\item for each $1\leq i \leq N$ update $\bm{w} := \bm{w} - \alpha \nabla E_i(\bm{w})$.
 			\end{itemize}
 		\end{itemize}
 	
-		\textbf{Mini-Batch}. Fix an integer $1 \leq \text{mb} \leq N$(mini-batch size).
+		\textbf{Mini-Batch GD}
 		\begin{itemize}
-			\item Start with a random $\bm{w}^0$.
+			\item Fix an integer $1 \leq \text{mb} \leq N$ (mini-batch size).
+			\item Start with an initial guess $\bm{w}^0$.
 			\item For each epoch $j \geq 0$:
 			\begin{itemize}
-				\item shuffle the dataset to prevent cycles;
+				\item shuffle the dataset;
 				\item for each $0 \leq i < \frac{N}{\text{mb}}$ update
 				\begin{equation*}
 					\bm{w} := \bm{w} - \alpha \nabla \sum_{k=i\cdot\text{mb} + 1}^{(i+1)\cdot\text{mb}}E_k(\bm{w}).
@@ -273,50 +263,49 @@
 	\begin{frame}
 		\frametitle{Tips and Tricks - How to choose?}
 		\begin{itemize}
-			\item Batch: usually more stable and provide a more accurate estimation of the gradient, but very slow.
-			\item SGD: very fast, stochastic approximation of the gradient implies possible instability (Zig-zag effect)
-			\item Mini-Batch: a trade-off (parallelism available).
+			\item Batch: usually more stable and provide a more accurate estimation of the gradient, but slow.
+			\item SGD: fast, stochastic approximation of the gradient implies possible instability (zig-zag effect)
+			\item Mini-Batch GD: a trade-off between Batch GD and SGD (parallelism available).
 		\end{itemize}
-	In practice, through SGD and mini-batch we may not even reach the minimum, but it is enough to get close to it.
+	%In practice, through SGD and Mini-Batch GD we may not even reach the minimum, but it is enough to get close to it.
 		\begin{figure}
 			\centering
-			\includegraphics[scale=0.35]{images/gd_mb_sgd}
-			\caption{Batch vs SGD vs Mini-batch}
+			\includegraphics[scale=0.42]{images/gd_mb_sgd}
+			\caption{Batch GD vs SGD vs Mini-Batch GD}
 		\end{figure}
 	
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{Gradient descent and normal equation for LR}
+		\frametitle{Normal Equation for LR and Gradient Descent}
 		We have $E(\bm{w}) = \frac{1}{N} ||\mathsf{X}\bm{w} - \bm{y}||^2$, hence
 		\begin{equation*}
 			\nabla E(\bm{w}) = \frac{1}{N} \nabla (||\mathsf{X}\bm{w} - \bm{y}||^2) = \frac{2}{N}\mathsf{X}^T(\mathsf{X}\bm{w} - \bm{y})
 		\end{equation*}
 	
-	Normal equation ($\textcolor{red}{\iff}$ holds if $\mathsf{X}^T\mathsf{X}$ is invertible):
-	\begin{align*}
-		\nabla E(\bm{w}) = 0 &\iff \frac{2}{N}\mathsf{X}^T(\mathsf{X}\bm{w} - \bm{y}) = 0\\ 
-		&\iff \mathsf{X}^T\mathsf{X}\bm{w} = \mathsf{X}^T\bm{y}\\
-		& \textcolor{red}{\iff} \bm{w} = (\mathsf{X}^T\mathsf{X})^{-1}\mathsf{X}^T\bm{y}
-	\end{align*}
-	
-	Gradient descent main iteration for LR:
-	
-	\begin{equation*}
-		\bm{w}^{j+1} := \bm{w}^{j} - \frac{2\alpha}{N}\mathsf{X}^T(\mathsf{X}\bm{w}^j - \bm{y})
-	\end{equation*}
-	
-		
+	\begin{itemize}
+		\item 	Normal equation ($\textcolor{red}{\iff}$ holds if $\mathsf{X}^T\mathsf{X}$ is invertible):
+		\begin{align*}
+			\nabla E(\bm{w}) = 0 &\iff \frac{2}{N}\mathsf{X}^T(\mathsf{X}\bm{w} - \bm{y}) = 0\\ 
+			&\iff \mathsf{X}^T\mathsf{X}\bm{w} = \mathsf{X}^T\bm{y}\\
+			& \textcolor{red}{\iff} \bm{w} = (\mathsf{X}^T\mathsf{X})^{-1}\mathsf{X}^T\bm{y}
+		\end{align*}
+		\item Gradient descent main iteration for LR:
+		\begin{equation*}
+			\bm{w}^{j+1} := \bm{w}^{j} - \frac{2\alpha}{N}\mathsf{X}^T(\mathsf{X}\bm{w}^j - \bm{y})
+		\end{equation*}
+	\end{itemize}
+
 	\end{frame}
 
 	\begin{frame}
 		\frametitle{Tips and Tricks - Invertibility of $\mathsf{X}^T\mathsf{X}$}
 		
-		Invertibility of $\mathsf{X}^T\mathsf{X} \iff$ columns of $X$ linearly independent (preprocessing information).
+		Invertibility of $\mathsf{X}^T\mathsf{X} \iff$ columns of $X$ linearly independent.
 		
 		\vspace{5mm}
 		
-		What happens when $\mathsf{X}^T\mathsf{X}$ is not invertible?
+		What if $\mathsf{X}^T\mathsf{X}$ is not invertible?
 		
 		\vspace{5mm}
 		
@@ -328,17 +317,17 @@
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{Normal equation vs gradient descent}
+		\frametitle{Normal Equation vs Gradient Descent}
 		Normal equation:
 		\begin{itemize}
-			\item No hyperparameter (explicit solution).
-			\item No need to iterate.
+			\item No hyperparameters (explicit solution).
+			\item No iterations.
 			\item $\mathcal{O}(N^3)$, since this is the cost to invert a dense matrix. In particular, it is slow when $N$ is large.
 		\end{itemize}
 	
 		\vspace{5mm}
 	
-		Gradient descent:
+		Gradient Descent:
 		\begin{itemize}
 			\item Need to choose the learning rate $\alpha$.
 			\item Needs many iterations.
@@ -349,18 +338,18 @@
 
 	\begin{frame}
 		\frametitle{Tips and Tricks - Standardization}
-		General (not only for LR): features must be on a similar scale!
+		General (not only for LR): features must have similar magnitudes!
 		\begin{itemize}
 			\item Speed up the convergence of gradient descent.
 			\item Try to have (on average) $-1 \leq \bm{x}^{(i)} \leq 1$.
 		\end{itemize}
 		Common techniques:
 		\begin{itemize}
-			\item \textbf{Feature scaling}. Compute the max $\bm{M} := [\max_i x^{(i)}_j]_j$ and the min $\bm{m} := [\min_i x^{(i)}_j]_j$ data value. Then normalize each feature as follows
+			\item \textbf{Feature scaling}. Compute the feature max $\bm{M} := [\max_i x^{(i)}_j]$ and the feature min $\bm{m} := [\min_i x^{(i)}_j]$ vectors. Then normalize features as follows
 			\begin{equation*}
 				\bm{x}_{\text{norm}}^i = \frac{\bm{x}^{(i)} - \bm{m}}{\bm{M} - \bm{m}}
 			\end{equation*} 
-			\item \textbf{Mean normalization}. Compute mean $\bm{\mu}$ $(\mu_j := \mathbb{E}[[x^{(i)}_j]_i])$ and standard deviation $\bm{\sigma}$ $(\sigma_j := \sqrt{\text{Var}[[x^{(i)}_j]_i]})$ of the data. Then normalize each feature as follows
+			\item \textbf{Mean normalization}. Compute the feature mean $\bm{\mu}$ $(\mu_j := \mathbb{E}[[x^{(i)}_j]_i])$ and the feature standard deviation $\bm{\sigma}$ $(\sigma_j := \sqrt{\text{Var}[[x^{(i)}_j]_i]})$. Then normalize features as follows
 			\begin{equation*}
 				\bm{x}_{\text{norm}}^{(i)} = \frac{\bm{x}^{(i)} -\bm{\mu}}{\bm{\sigma}} 
 			\end{equation*}
