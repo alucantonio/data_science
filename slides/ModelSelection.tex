@@ -6,7 +6,7 @@
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
 
-
+\setbeamertemplate{footline}[frame number]
 \title{Regularization and Model Selection}
 \author{Prof. Alessandro Lucantonio}
 \institute{Aarhus University}
@@ -68,7 +68,7 @@
 	\end{frame}
 	
 	\begin{frame}
-		\frametitle{LR with Tikhonov regularization}
+		\frametitle{Linear Regression with Tikhonov regularization}
 		\begin{itemize}
 			\item Cost function (without regularization):
 			\begin{equation*}
@@ -163,8 +163,8 @@
 		\end{figure}
 		\begin{itemize}
 			\item We split the entire dataset in three sets: training, validation and test (usually 60\%-20\%-20\% or  70\%-20\%-10\% of the total dataset). 
-			\item Training set is used to fit the model. Then, we evaluate its validation error and adjust its hyperparameters to reduce it. We re-fit the model and keep adjusting the hyperparameters until we find a model with a good trade-off between training and validation errors.
-			\item We assess the generalization capability of the best model by computing the error on the test set.
+			\item Training set is used to fit the model. Then, we evaluate its validation performance and adjust its hyperparameters to maximize it. We re-fit the model and keep adjusting the hyperparameters until we find a model with a good trade-off between training and validation performance.
+			\item We assess the generalization capability of the best model by evaluating the performance on the test set.
 		\end{itemize}	
 	\end{frame}
 
