@@ -372,18 +372,20 @@
 
 
 	\begin{frame}
-		\frametitle{Polynomial regression (PR)}
-		PR corresponds to polynomial hypothesis, i.e. of the form
-		\begin{equation*}
-			h_{\bm{w}}(\bm{x}) = \sum_{j=0}^n w_j x^j_j.
-		\end{equation*}
+		\frametitle{Polynomial Regression}
+		Polynomial Regression $\rightarrow$ polynomial hypothesis.
 		
 		\vspace{5mm}
-		More in general: linear basis expansion (LBE)
-		\begin{equation*}
-			h_{\bm{w}}(\bm{x}) = \sum_{j=0}^n w_j \phi_j(\bm{x}),
-		\end{equation*}
-		where $\phi_j: \mathbb{R}^n \rightarrow \mathbb{R}$.
+		
+		\textit{Example}: quadratic hypothesis (single feature):	
+		
+		$$h_{\bm{w}}(x_1) = w_0 + w_1 x_1 + w_2 x_1^2$$
+		
+		(in case of two features, there is also the term $x_1 x_2$)
+		
+		\vspace{5mm}
+		
+		To fit this model, use Linear Regression with features $x_1 = x_1$ and $x_2 = x_1^2$.
 	\end{frame}
 
 
