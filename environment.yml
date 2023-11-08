@@ -11,6 +11,7 @@ dependencies:
       - numpy==1.24.3
       - swig==4.1.1
       - torch
+      - torchvision
       - pandas
       - scipy
       - scikit-learn

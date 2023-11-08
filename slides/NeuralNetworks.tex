@@ -77,12 +77,12 @@
 		Operation of a single unit:
 		\begin{equation*}
 			\begin{cases}
-				z(\bm{x}) := \bm{w}^T \bm{x}\\
+				z(\bm{x}) := \bm{w}^T \bm{x} + \bm{b}\\
 				h(\bm{x}) := f(z(\bm{x}))
 			\end{cases}
 		\end{equation*}
 	
-		with $z$  the \textbf{net input} to the neuron and $f$ is the \textbf{activation function}. 
+		with $z$  the \textbf{net input} to the neuron, $ \bm{b}$ is the \textbf{bias} and $f$ is the \textbf{activation function}. 
 		
 		\vspace{5mm}
 		
@@ -138,20 +138,20 @@
 			\end{cases}
 		\end{equation*}
 		with 
-		$\bm{a}^{(0)} = \bm{x}$ (notice: no 1 in the first entry) and $\bm{a}^{(m-1)}$ is the output of the network. $\bm{b}^{(j)}$ is called \textit{bias}.
+		$\bm{a}^{(0)} = \bm{x}$ (notice: no 1 in the first entry) and $\bm{a}^{(m-1)}$ is the output of the network.
 
 	\end{frame}
 
 	\begin{frame}
 		\frametitle{MLP representation - Multiple samples}
-			For each sample $i=1,\dots, N$ and for each layer $j = 1, \dots, m-1$ compute:
+		For each layer $j = 1, \dots, m-1$ compute:
 		\begin{equation*}
 			\begin{cases}
-				\bm{z}^{(i,j)}(\bm{a}^{(i,j-1)}) := \bm{a}^{(i,j-1)}\mathsf{W}^{(j)}  + (\bm{b}^{(j)})^T,\\
-				\bm{a}^{(i,j)} := h^{(j)}(\bm{a}^{(i,j-1)}) = f^{(j)}(\bm{z}^{(i,j)}(\bm{a}^{(i,j-1)})).
+				\mathsf{Z}^{(j)}(\mathsf{A}^{(j-1)}) := \mathsf{A}^{(j-1)}\mathsf{W}^{(j)}  + (\bm{b}^{(j)})^T,\\
+				\mathsf{A}^{(j)} := h^{(j)}(\mathsf{A}^{(j-1)}) = f^{(j)}(\mathsf{Z}^{(j)}(\mathsf{A}^{(j-1)})).
 			\end{cases}
 		\end{equation*}
-		with $\bm{a}^{(i,0)} = \mathsf{X}$ (\textbf{without} the column of ones). Here $(\bm{b}^{(j)})^T$ is a \textit{row vector} containing the biases (use \href{https://numpy.org/doc/stable/user/basics.broadcasting.html}{\textit{broadcasting}} to extend it to $N$ samples).
+		with $\mathsf{A}^{(j)}$ the \textit{matrix} of the outputs of the $j$-th layer (rows correspond to samples) and $\mathsf{A}^{(0)} = \mathsf{X}$ (\textbf{without} the column of ones). Here, $(\bm{b}^{(j)})^T$ is a \textit{row vector} containing the biases (use \href{https://numpy.org/doc/stable/user/basics.broadcasting.html}{\textit{broadcasting}} to extend it to $N$ samples).
 		
 		\begin{figure}
 			\centering
@@ -265,7 +265,7 @@
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{Backpropagation - Example}
+		\frametitle{Back-propagation - Example}
 		\tiny
 		\begin{itemize}
 			\item \textit{Forward pass}: Compute the output $E$ given the inputs $\bm{x}$ following the operations of the graph.
