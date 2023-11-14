@@ -288,13 +288,36 @@
 		
 	\end{frame}
 
-% NEXT LECTURE
-%	\begin{frame}
-%		\frametitle{NN best practices}
-%		\begin{itemize}
-%			\item Initialize all weights randomly near zero, but \textbf{do not} to initialize them all to zero
-%			\item Number of epochs (i.e. number of iterations of SGD) are not an hyperparameter. Fix it to an appropriate number (e.g. 5000 or less) to avoid too slow convergences.
-%			\item Use regularization to counter overfitting.
-%		\end{itemize}
-%	\end{frame}
+	\begin{frame}
+		\frametitle{Tips and Tricks - NN best practices}
+		\begin{itemize}
+			\item Initialize all weights \textit{randomly} near zero (or use other initialization techniques), but \textbf{do not} initialize uniformly to \textit{break symmetry} and avoid \textit{vanishing/exploding gradients}
+			\item If a learning algorithm is suffering from \textit{high bias}, getting more training data will not (by itself) help much. Instead, if a learning algorithm is suffering from \textit{high variance}, getting more training data is likely to help
+			\item Fewer features fixes \textit{high variance} but not high bias; additional features fixes \textit{high bias} but not high variance
+			\item In general, use regularization to counter overfitting
+			\item Small (big) NNs are more prone to underfitting (overfitting); use cross-validation to select network size
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Basic Recipe for Machine Learning}
+		\begin{itemize}
+			\item If your model has a high bias:
+			\begin{itemize}
+				\item Try to make your NN bigger (number of hidden units, number of layers)
+				\item Try a different model that is suitable for your data
+				\item Try to increase the number of epochs
+			\end{itemize}
+			\item If your model has a high variance:
+			\begin{itemize}
+				\item More data
+				\item Try regularization
+				\item Try a different model that is suitable for your data
+			\end{itemize}
+			You should try the previous two points until you achieve low bias and low variance.
+		\end{itemize}
+	\end{frame}
 \end{document}
+
+% NEXT LECTURE:
+% learning rate decay, early stopping, dropout, ensemble, Adam/momentum, batch normalization
