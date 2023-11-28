@@ -3,6 +3,10 @@ channels:
   - conda-forge
 dependencies:
   - python=3.11.3
+  - pygmo
+  - box2d-py
+  - pygame
+  - gymnasium[box2d]
   - pip
   - pip:
       - gymnasium==0.28.1
@@ -15,3 +19,4 @@ dependencies:
       - pandas
       - scipy
       - scikit-learn
+      - skorch
