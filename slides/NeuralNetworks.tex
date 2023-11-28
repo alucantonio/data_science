@@ -2,6 +2,8 @@
 \usepackage{subfig}
 \usepackage{amsmath}
 \usepackage{bm}
+\usepackage[T1]{fontenc}
+
 
 \DeclareMathOperator*{\argmax}{arg\,max}
 \DeclareMathOperator*{\argmin}{arg\,min}
@@ -317,7 +319,54 @@
 			You should try the previous two points until you achieve low bias and low variance.
 		\end{itemize}
 	\end{frame}
-\end{document}
+	
+		\begin{frame}
+		\frametitle{Digression: Maximum Likelihood Estimation}
+		\begin{itemize}
+			\item $p_{\rm data}(x)$: data-generating distribution (unknown)
+			\item $p_{\rm model}(x; \bm{\theta})$: mapping of each configuration $x$ into a real number estimating the true probability $p_{\rm data}(x)$, for a given set of parameters $\bm{\theta}$
+		\end{itemize}	
+		\vspace{2mm}
+		\textit{Maximum Likelihood Estimator}:
+		$$ \bm{w} = \argmax_{\bm{\theta}} \prod_{i=1}^{N} p_{\rm model}(x^{(i)}; \bm{\theta}) $$
+		Take the log (does not change argmax) and divide by $N$:
+		\begin{align*}
+			\bm{w} &= \argmax_{\bm{\theta}}\mathbb{E}_{x \sim \hat{p}_{\rm data}} [\log p_{\rm model}(x; \bm{\theta})] \\
+			&= -\argmin_{\bm{\theta}}\mathbb{E}_{x \sim \hat{p}_{\rm data}} [\log p_{\rm model}(x; \bm{\theta})]
+		\end{align*} 
+		where $\hat{p}_{\rm data}$ is the \textbf{empirical distribution} defined by the training data.
+		This is equivalent to minimizing the \textit{dissimilarity} (or \textit{cross-entropy}) between $ \hat{p}_{\rm data}$ and $p_{\rm model}$:
+		$$ \mathbb{E}_{x \sim \hat{p}_{\rm data}} [\log \hat{p}_{\rm data}(x)-\log p_{\rm model}(x; \bm{\theta})] $$
+		\end{frame}
+		
+		\begin{frame}
+			\frametitle{Conditional Log-Likelihood and MSE}
+			The MLE estimator can be generalized to estimate a conditional probability $P(y^{(i)} | x^{(i)}; \bm{\theta})$ in order to predict $y^{(i)}$ given $x^{(i)}$. Assuming the samples are iid, we can write
+			\begin{align*}
+				\bm{w} &= \argmax_{\bm{\theta}}\sum_{i=1}^{N}\log P(y^{(i)} | x^{(i)}; \bm{\theta})
+			\end{align*} 
+			Think of the model as producing a conditional probability distribution. Assume:
+			$$ P(y^{(i)} | x^{(i)}; \bm{\theta}) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{\|\hat{y}^{(i)}-y^{(i)}\|^2}{2\sigma^2}\right)$$
+			where $\hat{y}^{(i)}$ is the prediction of the mean of the Gaussian. Then
+			$$\sum_{i=1}^{N}\log P(y^{(i)} | x^{(i)}; \bm{\theta}) = -N\log \sigma - \frac{N}{2}\log (2\pi) - \sum_{i=1}^{N}\frac{\|\hat{y}^{(i)}-y^{(i)}\|^2}{2\sigma^2}$$
+		\end{frame}
+		
+		\begin{frame}
+			\frametitle{Conditional Log-Likelihood and MSE}
+			Compare the log-likelihood with MSE:
+			$$\sum_{i=1}^{N}\log P(y^{(i)} | x^{(i)}; \bm{\theta}) = -N\log \sigma - \frac{N}{2}\log (2\pi) - \sum_{i=1}^{N}\frac{\|\hat{y}^{(i)}-y^{(i)}\|^2}{2\sigma^2}$$
+			$$ \textrm{MSE} = \frac{1}{N}  \sum_{i=1}^{N}\|\hat{y}^{(i)}-y^{(i)}\|^2$$
+			\textit{Maximizing} the \textbf{log-likelihood }with respect to the parameters yields the same estimate of them as does \textit{minimizing} the \textbf{MSE}.
 
-% NEXT LECTURE:
-% learning rate decay, early stopping, dropout, ensemble, Adam/momentum, batch normalization
+		\end{frame}
+		
+			\begin{frame}
+			\frametitle{Conditional Log-Likelihood and Binary Cross-Entropy}
+			In a \textit{binary classification} problem, consider
+			$$P(y^{(i)} | x^{(i)}; \bm{\theta}) = (\hat{y}^{(i)})^{y^{(i)}} (1-\hat{y}^{(i)})^{(1-{y}^{(i)})}$$
+			The log-likelihood is:
+			$$\sum_{i=1}^{N}\log P(y^{(i)} | x^{(i)}; \bm{\theta}) = \sum_{i=1}^{N}y^{(i)}\log(\hat{y}^{(i)}) + (1-{y}^{(i)})\log(1-\hat{y}^{(i)})$$
+			which is the \textbf{binary cross-entropy loss}.
+		\end{frame}
+		
+\end{document}

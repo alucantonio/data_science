@@ -41,8 +41,8 @@
 		
 		Overfitting can be countered through:
 		\begin{itemize}
-			\item validation;
-			\item regularization.
+			\item regularization;
+			\item validation.
 		\end{itemize}
 	\end{frame}
 	
@@ -134,6 +134,19 @@
 		\centering
 		\includegraphics[scale=0.8]{images/model_selection_general_idea}
 		\caption{Training (blue) and test (red) errors as the model complexity varies.}
+	\end{figure}
+\end{frame}
+
+	\begin{frame}
+	\frametitle{Early stopping}
+	\begin{itemize}
+		\item Store a copy of the model parameters every epoch the validation loss improves;
+		\item if the validation loss does not improve for a fixed number of epochs (\textit{patience}), terminate and return the best parameters.
+	\end{itemize}
+	\begin{figure}
+		\centering
+		\includegraphics[scale=0.45]{images/early_stopping}
+		\caption{Learning curves for a classifier trained on the MNIST dataset.}
 	\end{figure}
 \end{frame}
 
