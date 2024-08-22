@@ -17,6 +17,7 @@ dependencies:
       - torch
       - torchvision
       - pandas
+      - xgboost
       - scipy
       - scikit-learn
       - skorch
