@@ -10,13 +10,34 @@ of the folder.
 
 ## Setting up a Python environment
 To run the Python scripts contained in the repository, first you need to create a
-[`conda`](https://conda.io/projects/conda/en/latest/index.html) environment. We recommend using
+[`conda`](https://conda.io/projects/conda/en/latest/index.html) environment. 
+
+_If you already have Anaconda installed on your computer_ please follow these
+instructions:
+
+- Open the Anaconda Prompt (Windows)/Terminal (MacOS/Linux) and execute the following commands:
+  ```
+  conda install -n base conda-libmamba-solver
+  conda config --set solver libmamba
+  ```
+- Then, download the environment.yml from Brightspace and execute
+  ```
+  conda env create -f environment.yml
+  ```
+  to create the datascience environment and install all the Python libraries required for this course.
+- Activate the new environment to start coding and running the Python scripts/notebooks:
+  ```
+  conda activate datascience
+  ```
+  (this step must be done every time you open a new Prompt/Terminal.)
+
+_If you DO NOT have Anaconda already installed on your computer_, we recommend using
 [`mamba`](https://mamba.readthedocs.io/en/latest/) as a package manager.
 
 ### Windows
-- Download the latest `mambaforge` installer from
-[here](https://github.com/conda-forge/miniforge#mambaforge) (click on the link
-`Mambaforge-Windows-x86_64`).
+- Download the latest `miniforge` installer from
+[here](https://github.com/conda-forge/miniforge) (click on the link
+`Miniforge-Windows-x86_64`).
 - Run the installer and leave the default options during the
 installation procedure.
 **Warning**: you *cannot* use the default settings (in particular, the installation
@@ -45,13 +66,13 @@ contain spaces.
 - Open a terminal (e.g. `Terminal` under MacOS) and execute the following commands to
   download the installer using curl or wget and start the installation, e.g.
 ```
-curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
-bash Mambaforge-$(uname)-$(uname -m).sh
+curl -L -O "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
+bash Miniforge3-$(uname)-$(uname -m).sh
 ```
 or
 ```
-wget "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
-bash Mambaforge-$(uname)-$(uname -m).sh
+wget "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-$(uname)-$(uname -m).sh"
+bash Miniforge3-$(uname)-$(uname -m).sh
 ```
 - From the command prompt, enter the directory where you unzipped the contents of the repository.
 - Execute the command
