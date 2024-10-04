@@ -8,4 +8,5 @@
 *.snm
 *.synctex.gz
 *.Identifier
-
+*.pdf
+slides/*.pdf
