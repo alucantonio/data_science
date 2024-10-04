@@ -8,10 +8,10 @@
 \DeclareMathOperator*{\argmin}{arg\,min}
 
 \setbeamertemplate{footline}[frame number]
-\title{Regression and Gradient Descent}
+\title{Linear Regression}
 \author{Prof. Alessandro Lucantonio}
 \institute{Aarhus University}
-\date{24/10/2023}
+\date{7/10/2024}
 
 \setbeamertemplate{navigation symbols}{}
 
@@ -77,24 +77,66 @@
 		
 	\end{frame}
 
+
+
 	\begin{frame}
 		\frametitle{Performance measure: Mean Squared Error (MSE)}
-		To evaluate how good is the prediction we compute the \textbf{Mean Squared Error} (MSE) is:
-		$$E({\bm{w}}) := \frac{1}{N} \sum_{i=1}^{N} (h_{\bm{w}}(x^{(i)}) - y^{(i)})^2.$$
-		
-		To find the ``best" set of parameters, we minimize the MSE:
-		
-		$$\bm{w} \in \argmin_{\tilde{\bm{w}} \in \mathbb{R}^2} E(\tilde{\bm{w}}).$$
-		
+		\begin{itemize}
+			\item As a loss function (performance measure) for the LR problem, we use the \textbf{Mean Squared Error} (MSE):
+			$$E({\bm{w}}) := \frac{1}{N} \sum_{i=1}^{N} (h_{\bm{w}}(x^{(i)}) - y^{(i)})^2.$$
+			\item To find the ``best" set of parameters, we minimize the loss:
+			
+			$$\bm{w} \in \argmin_{\bm{\theta} \in \mathbb{R}^2} E(\bm{\theta}).$$
+		\end{itemize}
 	\end{frame}
 
-%	\begin{frame}
-%		\frametitle{MSE - Visualization}
-%		\begin{figure}
-%			\centering
-%			\includegraphics[scale=0.5]{images/mse}
-%		\end{figure}
-%	\end{frame}
+	\begin{frame}
+		\frametitle{MSE - Visualization}
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.5]{images/mse}
+		\end{figure}
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Digression: Maximum Likelihood Estimation}
+		\begin{itemize}
+			\item $p_{\rm data}(x)$: data-generating distribution (unknown)
+			\item $p_{\rm model}(x; \bm{\theta})$: mapping of each configuration $x$ into a real number estimating the true probability $p_{\rm data}(x)$, for a given set of parameters $\bm{\theta}$
+		\end{itemize}	
+		\vspace{2mm}
+		\textit{Maximum Likelihood Estimator}:
+		$$ \bm{w} = \argmax_{\bm{\theta}} \prod_{i=1}^{N} p_{\rm model}(x^{(i)}; \bm{\theta}) $$
+		Take the log (does not change argmax) and divide by $N$:
+		\begin{align*}
+			\bm{w} &= \argmax_{\bm{\theta}}\mathbb{E}_{x \sim \hat{p}_{\rm data}} [\log p_{\rm model}(x; \bm{\theta})] \\
+			&= -\argmin_{\bm{\theta}}\mathbb{E}_{x \sim \hat{p}_{\rm data}} [\log p_{\rm model}(x; \bm{\theta})]
+		\end{align*} 
+		where $\hat{p}_{\rm data}$ is the \textbf{empirical distribution} defined by the training data.
+		This is equivalent to minimizing the \textit{dissimilarity} (or \textit{cross-entropy}) between $ \hat{p}_{\rm data}$ and $p_{\rm model}$:
+		$$ \mathbb{E}_{x \sim \hat{p}_{\rm data}} [\log \hat{p}_{\rm data}(x)-\log p_{\rm model}(x; \bm{\theta})] $$
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Conditional Log-Likelihood and MSE}
+		The MLE estimator can be generalized to estimate a conditional probability $P(y^{(i)} | x^{(i)}; \bm{\theta})$ in order to predict $y^{(i)}$ given $x^{(i)}$. Assuming the samples are iid, we can write
+		\begin{align*}
+			\bm{w} &= \argmax_{\bm{\theta}}\sum_{i=1}^{N}\log P(y^{(i)} | x^{(i)}; \bm{\theta})
+		\end{align*} 
+		Think of the model as producing a conditional probability distribution. Assume:
+		$$ P(y^{(i)} | x^{(i)}; \bm{\theta}) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{\|\hat{y}^{(i)}-y^{(i)}\|^2}{2\sigma^2}\right)$$
+		where $\hat{y}^{(i)}$ is the prediction of the mean of the Gaussian. Then
+		$$\sum_{i=1}^{N}\log P(y^{(i)} | x^{(i)}; \bm{\theta}) = -N\log \sigma - \frac{N}{2}\log (2\pi) - \sum_{i=1}^{N}\frac{\|\hat{y}^{(i)}-y^{(i)}\|^2}{2\sigma^2}$$
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Conditional Log-Likelihood and MSE}
+		Compare the log-likelihood with MSE:
+		$$\sum_{i=1}^{N}\log P(y^{(i)} | x^{(i)}; \bm{\theta}) = -N\log \sigma - \frac{N}{2}\log (2\pi) - \sum_{i=1}^{N}\frac{\|\hat{y}^{(i)}-y^{(i)}\|^2}{2\sigma^2}$$
+		$$ \textrm{MSE} = \frac{1}{N}  \sum_{i=1}^{N}\|\hat{y}^{(i)}-y^{(i)}\|^2$$
+		\textit{Maximizing} the \textbf{log-likelihood }with respect to the parameters yields the same estimate of them as does \textit{minimizing} the \textbf{MSE}.
+		
+	\end{frame}
 
 	\begin{frame}
 		\frametitle{Multiple-feature Linear Regression}
@@ -105,61 +147,60 @@
 			\item Hypothesis: 
 			\begin{align*}
 				h_{\bm{w}}(\bm{x}^{(i)}) &= w_{n}x^{(i)}_n + w_{n-1}x^{(i)}_{n-1} + \dots + w_1 x^{(i)}_1 + w_0\\
-				&= \sum_{i=0}^n w_i \tilde{x}^{(i)}_i = \bm{w}^T \tilde{\bm{x}}^{(i)},
+				&= \sum_{j=0}^n w_j \tilde{x}^{(i)}_j = \mathsf{X}\bm{w},
 			\end{align*}
-			where $\bm{w} = [w_0, \dots, w_n]^T$ and $\tilde{\bm{x}}^{(i)} = [1, x^{(i)}_1, \dots, x^{(i)}_n]^T$.
+			where
+				\begin{equation*}
+				\mathsf{X} = \begin{bmatrix}
+					\tilde{\bm{x}}^{(1)}\\
+					\vdots\\
+					\tilde{\bm{x}}^{(N)}
+				\end{bmatrix} \in \mathbb{R}^{N \times (n+1)}
+			\end{equation*}
+			with $\tilde{\bm{x}}^{(i)} = [1, x^{(i)}_1, \dots, x^{(i)}_n]$ and $\bm{w} = [w_0, \dots, w_n]^T$.
 		\end{itemize}
 		
 	\end{frame}
 
 	\begin{frame}
 		\frametitle{Multiple-feature Linear Regression - MSE}
-		\textsl{MSE}:
+		The MSE can be computed using matrix-vector operations:
 		\begin{align*}
-			E(\bm{w}) &= \frac{1}{N} \sum_{i=1}^{N} (h_{\bm{w}}(\bm{x}^{(i)}) - y^{(i)})^2\\
-			&= \frac{1}{N} (\mathsf{X} \bm{w} - \bm{y})^T (\mathsf{X}\bm{w} - \bm{y})\\
-			&= \frac{1}{N} ||\mathsf{X}\bm{w} - \bm{y}||^2
+			E(\bm{w}) &= \frac{1}{N} \sum_{i=1}^{N} (h_{\bm{w}}(\bm{x}^{(i)}) - y^{(i)})^2 = \frac{1}{N} (\mathsf{X} \bm{w} - \bm{y})^T (\mathsf{X}\bm{w} - \bm{y})\\
+			&= \frac{1}{N} ||\mathsf{X}\bm{w} - \bm{y}||^2,
 		\end{align*}
 		where
 		\begin{equation*}
-			\mathsf{X} = \begin{bmatrix}
-				(\tilde{\bm{x}}^{(1)})^T\\
-				\vdots\\
-				(\tilde{\bm{x}}^{(N)})^T
-			\end{bmatrix} \quad \bm{y} = \begin{bmatrix}
+			 \bm{y} = \begin{bmatrix}
 			y^{(1)} \\
 			\vdots\\
 			y^{(N)}
-		\end{bmatrix}.
+		\end{bmatrix} \in \mathbb{R}^N.
 		\end{equation*}
-	Notice that $\mathsf{X} \in \mathbb{R}^{N \times (n+1)}$ and $\bm{y} \in \mathbb{R}^N$.
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{Coefficient of determination}
-		Idea: $\mathsf{X}$ and $\bm{y}$ can be thought as two random variables.
+		\frametitle{Coefficient of determination}		
 		
-		\vspace{5mm}
-		
-		Let $\bm{\epsilon} := \bm{y} - \mathsf{X}\bm{w}$ the vector of the residuals and $\sigma_{\bm{y}}:= \sqrt{\text{Var}(\bm{y})}$ the standard deviation of the targets.  The quantity
+		The coefficient of determination (usually denoted by $R^2$) is a statistical measure that can be used to evaluate the goodness of fit of a regression model. It is defined as:
 		\begin{equation*}
 			R^2 := 1 - \frac{||\bm{\epsilon}||^2}{\sigma_{\bm{y}}^2}
 		\end{equation*}
-		is called the \textsl{coefficient of determination}.
+		where $\bm{\epsilon} := \bm{y} - \mathsf{X}\bm{w}$ is the vector of the \textit{residuals} and $\sigma_{\bm{y}}:= \sqrt{\text{Var}(\bm{y})}$ the standard deviation of the targets. 
 		
 		\vspace{5mm}
 		
-		Best case scenario: $\sigma_{\bm{\epsilon}} = 0$, hence $R^2 = 1$.
+		Perfect fit: $\sigma_{\bm{\epsilon}} = 0$, hence $R^2 = 1$. Notice: $R^2$ \textit{may} be negative.
 		
 	\end{frame}
 
 	\begin{frame}
 		\frametitle{Finding the minimum: Gradient Descent}
-		How to find $\bm{w} \in \argmin_{\tilde{\bm{w}} \in \mathbb{R}^2} E(\tilde{\bm{w}})$?
+		How to find the optimal weights $\bm{w}$?
 		
 		\vspace{5mm}
 		
-		Main idea: geometrically, the gradient of a scalar function represents the direction of maximum slope. Hence, following the direction opposite to the gradient allows to decrease the value of the function, \textit{i.e.}
+		Main idea: geometrically, the gradient of a scalar function points in the direction of maximum growth. Hence, following the direction opposite to the gradient allows to decrease the value of the function, \textit{i.e.}
 		\begin{equation*}
 			E(\bm{w}^{j+1}) \leq E(\bm{w}^j) 
 		\end{equation*}
@@ -181,7 +222,7 @@
 		\begin{figure}
 			\centering
 			\includegraphics[scale=0.4]{images/gradient_descent_3D}
-			\caption{n blue the global minimum, in red the iteration points.}
+			\caption{In blue, the global minimum, in red, the iteration points.}
 		\end{figure}
 	\end{frame}
 
@@ -190,7 +231,7 @@
 		\begin{figure}
 			\centering
 			\includegraphics[scale=0.3]{images/gradient_descent_1}
-			\caption{Learning rate = 0.1}
+			\caption{Learning rate = 0.1.}
 		\end{figure}
 	\end{frame}
 
@@ -199,7 +240,7 @@
 		\begin{figure}
 			\centering
 			\includegraphics[scale=0.3]{images/gradient_descent_2}
-			\caption{Learning rate = 0.4}
+			\caption{Learning rate = 0.4.}
 		\end{figure}
 	\end{frame}
 
@@ -208,46 +249,48 @@
 		\begin{figure}
 			\centering
 			\includegraphics[scale=0.3]{images/gradient_descent_3}
-			\caption{Learning rate = 0.5}
+			\caption{Learning rate = 0.5.}
 		\end{figure}
 	\end{frame}
 
 	\begin{frame}
 		\frametitle{Batch GD, SGD and Mini-Batch GD - Intuition}
-		Notation: $E(\bm{w}) = 1/N \sum_{i=1}^N E_i(\bm{w})$
 		
-		The classical gradient descent update rule, \textit{i.e.} update the weights computing the gradient of the entire cost (error) function $E(\bm{w})$, is called \textbf{batch version}. However, for large number of samples ($N$) computing $\nabla E(\bm{w})$ is very time consuming.
+		For a dataset consisting of multiple samples, the loss function can be computed by summing over samples:
 		
-		\vspace{5mm}
+		$$E(\bm{w}) = \frac{1}{N} \sum_{i=1}^N E_i(\bm{w})$$
 		
-		To speed-up the update rule we approximate $\nabla E(\bm{w})$ with $\nabla E_i(\bm{w})$. This is the idea behind the so-called \textbf{Stochastic Gradient Descent} (SGD) or \textbf{online version}.
+		\begin{itemize}
+			\item The classical gradient descent update rule, \textit{i.e.} update the weights based on the gradient of the entire cost $E(\bm{w})$, is called \textbf{batch version}. However, for large $N$ computing $\nabla E(\bm{w})$ is very time consuming.
+			
+			\item To speed-up the update rule we approximate $\nabla E(\bm{w})$ with $\nabla E_i(\bm{w})$. This is the idea behind the so-called \textbf{Stochastic Gradient Descent} (SGD) or \textbf{online version}.
+			
+			\item A trade-off between batch GD and SGD is called the \textbf{mini-batch} GD.
+		\end{itemize}
 		
-		\vspace{5mm}
-		
-		A trade-off between batch GD and SGD is called the \textbf{mini-batch} GD.
 	\end{frame}
 
 	\begin{frame}
 		\frametitle{Batch GD, SGD and Mini-Batch GD - Algorithms}
 		
 		
-		\textbf{Batch GD}
+		\textbf{Batch GD}:
 		\begin{itemize}
 			\item Start with an initial guess $\bm{w}^0$.
-			\item For $j \geq 0$, update $\bm{w}^{j+1} := \bm{w}^{j} - \alpha \nabla E(\bm{w}^j)$.
+			\item For $j \geq 0$, update $\bm{w}^{j+1} = \bm{w}^{j} - \alpha \nabla E(\bm{w}^j)$.
 		\end{itemize}
 		
-		\textbf{SGD} (online)
+		\textbf{SGD} (online):
 		\begin{itemize}
 			\item Start with an initial guess $\bm{w}^0$.
 			\item For each epoch $j \geq 0$:
 			\begin{itemize}
 				\item draw a random sample $i$ from the dataset;
-				\item for each $1\leq i \leq N$ update $\bm{w} = \bm{w} - \alpha \nabla E_i(\bm{w})$.
+				\item for each $1\leq i \leq N$ update $\bm{w}^{j+1} = \bm{w}^j - \alpha \nabla E_i(\bm{w}^j)$.
 			\end{itemize}
 		\end{itemize}
 	
-		\textbf{Mini-Batch GD}
+		\textbf{Mini-Batch GD}:
 		\begin{itemize}
 			\item Fix an integer $1 \leq \text{mb} \leq N$ (mini-batch size).
 			\item Start with an initial guess $\bm{w}^0$.
@@ -256,7 +299,7 @@
 				\item draw a random batch from the dataset;
 				\item for each $0 \leq i < \frac{N}{\text{mb}}$ update
 				\begin{equation*}
-					\bm{w} := \bm{w} - \alpha \nabla \sum_{k=i\cdot\text{mb} + 1}^{(i+1)\cdot\text{mb}}E_k(\bm{w}).
+					\bm{w}^{j+1} = \bm{w}^j - \alpha \nabla \sum_{k=i\cdot\text{mb} + 1}^{(i+1)\cdot\text{mb}}E_k(\bm{w}^j).
 				\end{equation*}
 			\end{itemize} 
 		\end{itemize}
@@ -264,7 +307,7 @@
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{Tips and Tricks - How to choose?}
+		\frametitle{How to choose among different variants?}
 		\begin{itemize}
 			\item Batch: usually more stable and provide a more accurate estimation of the gradient, but slow.
 			\item SGD: fast, stochastic approximation of the gradient implies possible instability (zig-zag effect)
@@ -274,7 +317,7 @@
 		\begin{figure}
 			\centering
 			\includegraphics[scale=0.42]{images/gd_mb_sgd}
-			\caption{Batch GD vs SGD vs Mini-Batch GD}
+			\caption{Batch GD vs SGD vs Mini-Batch GD.}
 		\end{figure}
 	
 	\end{frame}
@@ -295,14 +338,14 @@
 		\end{align*}
 		\item Gradient descent main iteration for LR:
 		\begin{equation*}
-			\bm{w}^{j+1} := \bm{w}^{j} - \frac{2\alpha}{N}\mathsf{X}^T(\mathsf{X}\bm{w}^j - \bm{y})
+			\bm{w}^{j+1} = \bm{w}^{j} - \frac{2\alpha}{N}\mathsf{X}^T(\mathsf{X}\bm{w}^j - \bm{y})
 		\end{equation*}
 	\end{itemize}
 
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{Tips and Tricks - Invertibility of $\mathsf{X}^T\mathsf{X}$}
+		\frametitle{On the invertibility of $\mathsf{X}^T\mathsf{X}$}
 		
 		Invertibility of $\mathsf{X}^T\mathsf{X} \iff$ columns of $X$ linearly independent.
 		
@@ -325,7 +368,7 @@
 		\begin{itemize}
 			\item No hyperparameters (explicit solution).
 			\item No iterations.
-			\item $\mathcal{O}(N^3)$, since this is the cost to invert a dense matrix. In particular, it is slow when $N$ is large.
+			\item Computational cost dominated by inversion of a dense matrix (slow when $N$ is large).
 		\end{itemize}
 	
 		\vspace{5mm}
@@ -334,38 +377,37 @@
 		\begin{itemize}
 			\item Need to choose the learning rate $\alpha$.
 			\item Needs many iterations.
-			\item $\mathcal{O}(N^2)$, hence faster when $N$ is large.
+			\item Cost per iteration lower than matrix inversion, hence faster when $N$ is large.
 		\end{itemize}
 	\end{frame}
 
 
 	\begin{frame}
-		\frametitle{Tips and Tricks - Standardization}
-		General (not only for LR): features must have similar magnitudes!
+		\frametitle{Dataset scaling}
+		In general, features \textbf{must} have similar magnitudes, for good convergence of gradient descent-based methods.
+		\vspace{1mm}
+		
+		\begin{figure}
+			\centering
+			\includegraphics[scale=0.3]{images/feature-scaling}
+			\caption{Example loss landscapes with and without feature scaling ($F_1$ and $F_2$ are the weights of the model).}
+		\end{figure}
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Dataset scaling}
+	
+		Common approaches:
 		\begin{itemize}
-			\item Speed up the convergence of gradient descent.
-			\item Try to have (on average) $-1 \leq \bm{x}^{(i)} \leq 1$.
-		\end{itemize}
-		Common techniques:
-		\begin{itemize}
-			\item \textbf{Feature scaling}. Compute the feature max $\bm{M} := [\max_i x^{(i)}_j]$ and the feature min $\bm{m} := [\min_i x^{(i)}_j]$ vectors. Then normalize features as follows
+			\item \textbf{Min-max scaling}. Compute the feature max $\bm{M} := [\max_i x^{(i)}_j]$ and the feature min $\bm{m} := [\min_i x^{(i)}_j]$ vectors. Then normalize features as follows
 			\begin{equation*}
 				\bm{x}_{\text{norm}}^i = \frac{\bm{x}^{(i)} - \bm{m}}{\bm{M} - \bm{m}}
 			\end{equation*} 
-			\item \textbf{Mean normalization}. Compute the feature mean $\bm{\mu}$ $(\mu_j := \mathbb{E}[[x^{(i)}_j]_i])$ and the feature standard deviation $\bm{\sigma}$ $(\sigma_j := \sqrt{\text{Var}[[x^{(i)}_j]_i]})$. Then normalize features as follows
+			\item \textbf{Standardization}. Compute the feature mean $\bm{\mu}$ $(\mu_j := \mathbb{E}_i[x^{(i)}_j])$ and the feature standard deviation $\bm{\sigma}$ $(\sigma_j := \sqrt{\text{Var}_i[x^{(i)}_j]})$. Then normalize features as follows
 			\begin{equation*}
 				\bm{x}_{\text{norm}}^{(i)} = \frac{\bm{x}^{(i)} -\bm{\mu}}{\bm{\sigma}} 
 			\end{equation*}
 		\end{itemize}
-	\end{frame}
-
-	\begin{frame}
-		\frametitle{Tips and Tricks - Standardization}
-		\begin{figure}
-			\centering
-			\includegraphics[scale=0.35]{images/feature-scaling}
-		\end{figure}
-
 		
 	\end{frame}
 
