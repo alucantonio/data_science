@@ -401,7 +401,7 @@
 		\begin{itemize}
 			\item \textbf{Min-max scaling}. Compute the feature max $\bm{M} := [\max_i x^{(i)}_j]$ and the feature min $\bm{m} := [\min_i x^{(i)}_j]$ vectors. Then normalize features as follows
 			\begin{equation*}
-				\bm{x}_{\text{norm}}^i = \frac{\bm{x}^{(i)} - \bm{m}}{\bm{M} - \bm{m}}
+				\bm{x}_{\text{norm}}^{(i)} = \frac{\bm{x}^{(i)} - \bm{m}}{\bm{M} - \bm{m}}
 			\end{equation*} 
 			\item \textbf{Standardization}. Compute the feature mean $\bm{\mu}$ $(\mu_j := \mathbb{E}_i[x^{(i)}_j])$ and the feature standard deviation $\bm{\sigma}$ $(\sigma_j := \sqrt{\text{Var}_i[x^{(i)}_j]})$. Then normalize features as follows
 			\begin{equation*}
