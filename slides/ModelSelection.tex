@@ -10,7 +10,7 @@
 \title{Regularization and Model Selection}
 \author{Prof. Alessandro Lucantonio}
 \institute{Aarhus University}
-\date{31/10/2023}
+\date{}
 
 \setbeamertemplate{navigation symbols}{}
 
@@ -54,9 +54,7 @@
 		\begin{equation*}
 			E_{r}(\bm{w}) = E(\bm{w}) + R_{\lambda}(\bm{w})
 		\end{equation*}
-		where $R_{\lambda}$ is the \textsl{regularization term}.
-		
-		$\lambda > 0$ is a hyperparameter that must be chosen in the \textbf{model selection phase} (see later).
+		where $R_{\lambda}$ is the \textsl{regularization term}. $\lambda > 0$ is a hyperparameter that must be chosen in the \textbf{model selection phase} (see later).
 		
 		\vspace{5mm}
 		
@@ -223,7 +221,7 @@
 		
 		\vspace{2mm}
 		
-		\textbf{Example}: two hyperparameters (learning rate $\alpha$ and regularization parameter $\lambda$). Consider sets of three values for each parameter, e.g. $\alpha_{\text{vals}} = \{0.001, 0.01, 0.1\}, \lambda_{\text{vals}} = \{0.0001, 0.001, 0.01\}$. 
+		\textbf{Example}: two hyperparameters (learning rate $\alpha$ and regularization factor $\lambda$). Consider sets of three values for each parameter, e.g. $\alpha_{\text{vals}} = \{0.001, 0.01, 0.1\}, \lambda_{\text{vals}} = \{0.0001, 0.001, 0.01\}$. 
 		
 		Evaluate the model with $(\alpha, \lambda) = (i,j)$ for $i \in \alpha_{\text{vals}}, j \in \lambda_{\text{vals}}$.
 		
@@ -231,11 +229,11 @@
 			\centering
 			\includegraphics[scale=0.4]{images/grid-search}
 		\end{figure}
-		Choose the pair of value corresponding to the \textit{best performance on the validation set}.
+		Choose the pair corresponding to the \textit{best performance on the validation set} (according, for example, to a $n$-fold CV). 
 		
 		\vspace{2mm}
 		
-		\textbf{Refinement}: Suppose that the best is $(0.1, 0.001)$. Then we can ``zoom" near the best set doing another grid search with e.g. $\alpha_{\text{vals}} = \{0.075, 0.1, 0.125\}, \lambda_{\text{vals}} = \{0.00075, 0.001, 0.00125\}$. 
+		\textbf{Refinement}: Suppose that the best pair is $(0.1, 0.001)$. Then we can ``zoom in" and do another grid search with e.g. $\alpha_{\text{vals}} = \{0.075, 0.1, 0.125\}, \lambda_{\text{vals}} = \{0.00075, 0.001, 0.00125\}$. 
 		
 	\end{frame}
 	

@@ -10,7 +10,7 @@
 \title{Logistic Regression}
 \author{Prof. Alessandro Lucantonio}
 \institute{Aarhus University}
-\date{31/10/2023}
+\date{}
 
 \setbeamertemplate{navigation symbols}{}
 
@@ -23,7 +23,7 @@
 		Recall: 
 		\begin{itemize}
 			\item Classification $\rightarrow$ discrete target.
-			\item Binary classification: $\{0,1\}$ target. Example: spam/not spam e-mails.
+			\item Binary classification: $\{0,1\}$ target (Ex.: spam/not spam).
 		\end{itemize}
 		
 		\vspace{5mm}
@@ -49,14 +49,14 @@
 		\begin{figure}
 			\centering
 			\includegraphics[scale=0.42]{images/sigmoid}
-			\caption{Sigmoid function}
+			\caption{Sigmoid function.}
 		\end{figure}
 		
 	\end{frame}
 
 	\begin{frame}
 		\frametitle{Linear decision boundary}
-		Model: $h_{\bm{w}}(x_1, x_2) = \sigma(w_0 + w_1 x_1 + w_2 x_2)$
+		Hypothesis: $h_{\bm{w}}(x_1, x_2) = \sigma(w_0 + w_1 x_1 + w_2 x_2)$
 		
 		\vspace{2mm}
 		
@@ -66,17 +66,17 @@
 		\begin{figure}
 			\centering
 			\includegraphics[scale=0.5]{images/linear_decision_boundary}
-			\caption{An example of linear decision boundary}
+			\caption{An example of linear decision boundary.}
 		\end{figure}
 	\end{frame}
 
 	\begin{frame}
 		\frametitle{Non-linear decision boundary}
-		Model: $h_{\bm{w}}(x_1, x_2) = \sigma(w_0 + w_1 x_1 + w_2 x_2 + w_3 x_1^2 + w_4 x_2^2)$
+		Hypothesis: $h_{\bm{w}}(x_1, x_2) = \sigma(w_0 + w_1 x_1 + w_2 x_2 + w_3 x_1^2 + w_4 x_2^2)$
 		\begin{figure}
 			\centering
 			\includegraphics[scale=0.8]{images/non-linear-decision-boundary}
-			\caption{An example of non-linear decision boundary}
+			\caption{An example of non-linear decision boundary.}
 		\end{figure}
 	\end{frame}
 
@@ -92,19 +92,18 @@
 		
 		\vspace{5mm}
 		
-		Main idea: consider the a loss term such that 
-		
+		Main idea: consider the a loss term that behaves as
 		\begin{itemize}
 			\item $-\log h_{\bm{w}}(\tilde{\bm{x}}^{(i)})$ if $y=1$, 
-			\item $-\log (1-h_{\bm{w}}(\tilde{\bm{x}}^{(i)})) = 0$ if $y=0$
+			\item $-\log (1-h_{\bm{w}}(\tilde{\bm{x}}^{(i)}))$ if $y=0$
 		\end{itemize}
 		
 		Notice that:
 		\begin{itemize}
-			\item if $y=1$ and $h_{\bm{w}}(\tilde{\bm{x}}^{(i)}) = 1$, $-\log h_{\bm{w}}(\tilde{\bm{x}}^{(i)}) = 0$;
-			\item if $y=1$ and $h_{\bm{w}}(\tilde{\bm{x}}^{(i)}) = 0$, $-\log h_{\bm{w}}(\tilde{\bm{x}}^{(i)}) \rightarrow \infty$;
-			\item if $y=0$ and $h_{\bm{w}}(\tilde{\bm{x}}^{(i)}) = 1$, $-\log (1-h_{\bm{w}}(\tilde{\bm{x}}^{(i)})) \rightarrow \infty$;
-			\item if $y=0$ and $h_{\bm{w}}(\tilde{\bm{x}}^{(i)}) = 0$, $-\log (1-h_{\bm{w}}(\tilde{\bm{x}}^{(i)})) = 0$;
+			\item if $y=1$ and $h_{\bm{w}}(\tilde{\bm{x}}^{(i)}) \rightarrow 1$, $-\log h_{\bm{w}}(\tilde{\bm{x}}^{(i)}) \rightarrow 0$;
+			\item if $y=1$ and $h_{\bm{w}}(\tilde{\bm{x}}^{(i)}) \rightarrow 0$, $-\log h_{\bm{w}}(\tilde{\bm{x}}^{(i)}) \rightarrow \infty$;
+			\item if $y=0$ and $h_{\bm{w}}(\tilde{\bm{x}}^{(i)}) \rightarrow 1$, $-\log (1-h_{\bm{w}}(\tilde{\bm{x}}^{(i)})) \rightarrow \infty$;
+			\item if $y=0$ and $h_{\bm{w}}(\tilde{\bm{x}}^{(i)}) \rightarrow 0$, $-\log (1-h_{\bm{w}}(\tilde{\bm{x}}^{(i)})) \rightarrow 0$;
 		\end{itemize}
 
 	\end{frame}
@@ -149,11 +148,7 @@
 			\caption{An example of a non-convex function}
 		\end{figure}
 		
-		Remember the main challenge/goal of ML: \textbf{generalization}.
-		
-		\begin{itemize}
-			\item A global minimum of the cost function corresponds to the best fit of the training set: this may lead to \textit{overfitting}.
-		\end{itemize}
+		Remember the main challenge/goal of ML: \textbf{generalization}.  A global minimum of the cost function corresponds to the best fit of the training set: this may lead to \textbf{overfitting}.
 	\end{frame}
 
 %	\begin{frame}
@@ -170,8 +165,8 @@
 %	\end{frame}
 
 	\begin{frame}
-		\frametitle{Derivative of the sigmoid}
-		Goal: computing the gradient of the cross-entropy with respect to the weights.
+		\frametitle{Gradient descent - Derivative of the sigmoid}
+		For gradient descent-based optimization, we need to compute the gradient of the cross-entropy with respect to the weights.
 		
 		\vspace{5mm}
 		
@@ -191,7 +186,7 @@
 	
 		(assuming sum on repeated indices)
 		\begin{align*}
-			N\frac{\partial}{\partial \bm{w}_j} E(\bm{w}) &= - \left[\frac{y^{(i)} \frac{\partial}{\partial w_j}h_{\bm{w}}(\tilde{\bm{x}}^{(i)})}{h_{\bm{w}}(\tilde{\bm{x}}^{(i)})} - \frac{(1-y^{(i)}) \frac{\partial}{\partial \bm{w}_j}(1 -h_{\bm{w}}(\tilde{\bm{x}}^{(i)}))}{1-h_{\bm{w}}(\tilde{\bm{x}}^{(i)})}\right]\\
+			N\frac{\partial}{\partial \bm{w}_j} E(\bm{w}) &= - \left[\frac{y^{(i)} \frac{\partial}{\partial \bm{w}_j}h_{\bm{w}}(\tilde{\bm{x}}^{(i)})}{h_{\bm{w}}(\tilde{\bm{x}}^{(i)})} - \frac{(1-y^{(i)}) \frac{\partial}{\partial \bm{w}_j}(1 -h_{\bm{w}}(\tilde{\bm{x}}^{(i)}))}{1-h_{\bm{w}}(\tilde{\bm{x}}^{(i)})}\right]\\
 		\end{align*}
 		with
 		\begin{align*}
@@ -207,7 +202,6 @@
 		\frametitle{Gradient of the cross-entropy /2}
 		\begin{align*}
 			N\frac{\partial}{\partial \bm{w}_j} E(\bm{w})&= -[y^{(i)}(1 - h_{\bm{w}}(\tilde{\bm{x}}^{(i)}))\tilde{\bm{x}}^{(i)}_j - (1-y^{(i)})h_{\bm{w}}(\tilde{\bm{x}}^{(i)})\tilde{\bm{x}}^{(i)}_j]\\
-			&= -[y^{(i)}-  h_{\bm{w}}(\tilde{\bm{x}}^{(i)})]\tilde{\bm{x}}^{(i)}_j\\
 			& = [h_{\bm{w}}(\tilde{\bm{x}}^{(i)})- y^{(i)}]\tilde{\bm{x}}^{(i)}_j.
 		\end{align*}
 	Final result:
@@ -225,15 +219,15 @@
 	\begin{frame}
 		\frametitle{Multi-class classification}
 		
-		Targets: $y \in \{0, \dots, k\}$
+		Targets: $y \in \{0, \dots, k\}$.
 		
 		\vspace{5mm}
 		
-		Idea: solve $k+1$ binary classification problems. Given a data sample $\bm{x}^{(i)}$
+		Idea: solve $k+1$ binary classification problems. Given a data sample $\bm{x}^{(i)}$:
 		\begin{itemize}
 			\item For each $0\leq j \leq k$, compute the probability $h^{(j)}_{\bm{w}}(\tilde{\bm{x}}^{(i)})$ that $\tilde{\bm{x}}^{(i)}$ belongs to the class $j$.
 			\item The prediction will be the class that corresponds to the maximum probability, \textit{i.e.} 
-			$$\argmax_j h^{(j)}_{\bm{w}}(\tilde{\bm{x}}^{(i)})$$
+			$$\argmax_j h^{(j)}_{\bm{w}}(\tilde{\bm{x}}^{(i)})\ .$$
 		\end{itemize}
 		
 		
