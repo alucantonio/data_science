@@ -24,11 +24,11 @@
 		
 		\vspace{5mm}
 		
-		Doing only a few exercises while studying leads to poor perfomance both on homework and at the exam. This is called \textsl{underfitting}: the performance at the exam will be bad because of poor training.
+		Practicing on only a few exercises leads to poor perfomance both on homework and at the exam. This is called \textsl{underfitting}: the performance at the exam will be bad because of poor training.
 		
 		\vspace{5mm}
 		
-		Moreover, memorize all the solutions to homework leads to the maximum score on homework (trivially) but probably a bad score on the exam exercises. This is called \textsl{overfitting}: you have a bad performance on the exam because you did not capture the true essence of the homework, rather you have memorized their peculiarities.
+		Moreover, memorizing all the solutions to homework leads to the maximum score on homework (trivially) but probably a bad score on the exam exercises. This is called \textsl{overfitting}. The bad performance on the exam occurs because  you did not capture the true essence of the homework, rather you have memorized their peculiarities.
 	\end{frame}
 	
 	\begin{frame}
@@ -58,7 +58,7 @@
 		
 		\vspace{5mm}
 		
-		Most common regularization techniques:
+		Most common regularization techniques (do \textbf{not} include bias term):
 		\begin{itemize}
 			\item Tikhonov (or $L^2$ or \textit{Ridge}): $R_{\lambda}(\bm{w}) = \lambda ||\bm{w}||^2_2 = \lambda \sum_i w_i^2$. Tends to make \textit{all} weights small.
 			\item LASSO (or $L^1$): $R_{\lambda}(\bm{w}) = \lambda ||\bm{w}||_1 = \lambda \sum_i |w_i|$. Tends to make \textit{some} weights $0$ (feature selection).
@@ -135,49 +135,40 @@
 	\end{figure}
 \end{frame}
 
-	\begin{frame}
-	\frametitle{Early stopping}
-	\begin{itemize}
-		\item Store a copy of the model parameters every epoch the validation loss improves;
-		\item if the validation loss does not improve for a fixed number of epochs (\textit{patience}), terminate and return the best parameters.
-	\end{itemize}
-	\begin{figure}
-		\centering
-		\includegraphics[scale=0.45]{images/early_stopping}
-		\caption{Learning curves for a classifier trained on the MNIST dataset.}
-	\end{figure}
-\end{frame}
+	
 
 	\begin{frame}
 		\frametitle{Model selection and model assessment}
 		
-		Do \textbf{not} use the test set to tune hyperparameters: introduce the \textbf{validation set}.
-		
-		\vspace{5mm}
-		
-		In general, we should distinguish between:
+		In general, we should distinguish between two phases:
 		\begin{enumerate}
-		\item Model selection: estimate the performance of different models trained with different hyperparameters. 
-		\item Model assessment: after choosing a final model we evaluate its performance on \textsl{new, previously unseen} (test) data.
+			\item Model selection: estimate the performance of different models trained with different hyperparameters. 
+			\item Model assessment: after choosing a final model we evaluate its performance on \textsl{new, previously unseen} (test) data.
 		\end{enumerate}
 		
 		\vspace{5mm}
 		
-		Once we have selected a model using the validation set, we can assess its generalization error on the test set. Splitting the dataset into training and validation sets is called \textit{hold-out}.
+		\begin{itemize}
+			\item For step 1: do \textbf{not} use the \textit{test set} to tune hyperparameters; use the \textbf{validation set}. The test set must never be touched until model assessment.
+			\item For step 2: once we have selected a model using the validation set, we can assess its \textit{generalization error} on the \textbf{test set}. %Splitting the dataset into training and validation sets is called \textit{hold-out}.
+		\end{itemize}
+		
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{Double Hold-out}
+		\frametitle{Double Hold-out - model selection/assessment workflow}
 		\begin{figure}
 			\centering
 			\includegraphics[scale=0.3]{images/hold-out}
 		\end{figure}
-		\begin{itemize}
-			\item We split the entire dataset in three sets: training, validation and test (usually 60\%-20\%-20\% or  70\%-20\%-10\% of the total dataset). 
-			\item Training set is used to fit the model. Then, we evaluate its validation performance and adjust its hyperparameters to maximize it. We re-fit the model and keep adjusting the hyperparameters until we find a model with a good trade-off between training and validation performance.
-			\item We assess the generalization capability of the best model by evaluating the performance on the test set.
-		\end{itemize}	
+		\begin{enumerate}
+			\item Split the entire dataset in three sets: training, validation and test (typically 60\%-20\%-20\% or  70\%-20\%-10\% of the total dataset). 
+			\item Fit the model on the training set using different hyperparameters until a model is found that \textbf{maximizes the validation performance}. \textit{Optional}:  re-train the best model using training+validation. 
+			\item Assess the generalization capability of the best (re-trained) model by evaluating its performance on the test set.
+		\end{enumerate}	
 	\end{frame}
+
+
 
 	\begin{frame}
 		\frametitle{Cross-Validation}
@@ -188,28 +179,31 @@
 				\includegraphics[scale=0.4]{images/cross-validation}
 				\caption{5-fold CV}
 			\end{figure}
-			\column{0.58\linewidth}
-			\begin{itemize}
-				\item Split the data in $k$ disjoint \textit{folds}.
-				\item Use $k-1$ folds as the training set and the remaining fold as the validation set. Repeat $k$ times (see figure).
-				\item The performance will be the mean $\pm$ standard deviation computed across the $k$ runs.
-			\end{itemize}
+			\column{0.65\linewidth}
+			\begin{enumerate}
+				\small
+				\item Hold out the test data.
+				\item Split the remaining data (development set) in $k$ disjoint \textit{folds} ($k$-fold CV).
+				\item Use $k-1$ folds as the training set and the remaining fold as the validation set. Compute the performance measure (MSE, accuracy\dots) over the validation set. Repeat $k$ times by changing the training set (see figure). 
+				\item Compute the \textbf{validation performance} as the mean $\pm$ standard deviation of the performance measure across the $k$ runs.
+			\end{enumerate}
 		\end{columns}
 		
 		\vspace{5mm}
 		
-		\textit{Pro}: Not sensitive to a particular partition of the data. Mean filter the error.
+		\textit{Pro}: Not sensitive to a particular partition of the data.
 		
-		\textit{Cons}: Computationally expensive (but parallellizable).
+		\textit{Con}: Computationally expensive (but parallellizable).
+		
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{CV for selection and hold-out for assessment}
+		\frametitle{Workflow for selection using CV and assessment}
 		\begin{enumerate}
-			\item Split dataset into two sets (hold-out): development $D$ (model selection) and test $T$ (model assessment).
-			\item Use the cross validation method on $D$ to select the best model.
-			\textit{Optional}:  retrain the best model using the entire dataset $D$. 
-			\item Evaluate the generalization error on the test set $T$.
+			\item Split dataset into two sets: development (model selection) and test (model assessment).
+			\item Use the cross validation method on the development set to select the best model, i.e. the one that \textbf{maximizes the mean validation performance}.
+			\textit{Optional}:  retrain the best model using the entire development set. 
+			\item Evaluate the generalization error on the test set.
 		\end{enumerate}
 	
 	\end{frame}
@@ -217,24 +211,42 @@
 	\begin{frame}
 		\frametitle{Grid search}
 		
-		How to choose the best set of hyperparameters?
+		How to search for the best set of hyperparameters?
 		
-		\vspace{2mm}
+		\vspace{1mm}
 		
-		\textbf{Example}: two hyperparameters (learning rate $\alpha$ and regularization factor $\lambda$). Consider sets of three values for each parameter, e.g. $\alpha_{\text{vals}} = \{0.001, 0.01, 0.1\}, \lambda_{\text{vals}} = \{0.0001, 0.001, 0.01\}$. 
+		\textbf{Example}: two hyperparameters (learning rate $\alpha$ and regularization factor $\lambda$). 
+		\begin{enumerate}
+			\item Consider sets of three values for each parameter, e.g. $\alpha_{\text{vals}} = \{0.001, 0.01, 0.1\}, \lambda_{\text{vals}} = \{0.0001, 0.001, 0.01\}$. 
+			
+			Evaluate the model with $(\alpha, \lambda) = (i,j)$ for $i \in \alpha_{\text{vals}}, j \in \lambda_{\text{vals}}$.
+			
+			\begin{figure}
+				\centering
+				\includegraphics[scale=0.35]{images/grid-search}
+			\end{figure}
+			
+			\item Choose the pair corresponding to the \textbf{best performance on the validation set} based, for example, on a $k$-fold CV or double hold-out. 
+			
+			\item \textbf{Refinement}: Suppose that the best pair is $(0.1, 0.001)$. Then we can ``zoom in" and do another grid search with e.g. $\alpha_{\text{vals}} = \{0.075, 0.1, 0.125\}, \lambda_{\text{vals}} = \{0.00075, 0.001, 0.00125\}$. 
+		\end{enumerate}
 		
-		Evaluate the model with $(\alpha, \lambda) = (i,j)$ for $i \in \alpha_{\text{vals}}, j \in \lambda_{\text{vals}}$.
 		
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Early stopping}
+		\begin{itemize}
+			\item Store a copy of the model weights every epoch the validation loss improves;
+			\item if the validation loss does not improve for a fixed number of epochs (\textit{patience}), terminate and return the best weights.
+		\end{itemize}
 		\begin{figure}
 			\centering
-			\includegraphics[scale=0.4]{images/grid-search}
+			\includegraphics[scale=0.45]{images/early_stopping}
+			\caption{Learning curves for a classifier.}
 		\end{figure}
-		Choose the pair corresponding to the \textit{best performance on the validation set} (according, for example, to a $n$-fold CV). 
 		
-		\vspace{2mm}
-		
-		\textbf{Refinement}: Suppose that the best pair is $(0.1, 0.001)$. Then we can ``zoom in" and do another grid search with e.g. $\alpha_{\text{vals}} = \{0.075, 0.1, 0.125\}, \lambda_{\text{vals}} = \{0.00075, 0.001, 0.00125\}$. 
-		
+		\textit{Notice}: the training loss should include the regularization term, but the validation loss should not.
 	\end{frame}
 	
 %	\begin{frame}

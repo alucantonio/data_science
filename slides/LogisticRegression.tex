@@ -63,10 +63,14 @@
 		$h_{\bm{w}}(x_1, x_2) \geq 0.5$ when $w_0 + w_1 x_1 + w_2 x_2 \geq 0 \implies y = 1$
 		$h_{\bm{w}}(x_1, x_2) < 0.5$ when $w_0 + w_1 x_1 + w_2 x_2 < 0 \implies y = 0$
 		
+		\vspace{1mm}
+		
+		The decision boundary is \textbf{not unique} in the \textit{linearly separable case} unless additional constraints, like \textit{regularization}, are applied.
+		
 		\begin{figure}
 			\centering
-			\includegraphics[scale=0.5]{images/linear_decision_boundary}
-			\caption{An example of linear decision boundary.}
+			\includegraphics[scale=0.38]{images/linear_decision_boundary}
+			\caption{An example of linear decision boundary for the linearly separable case.}
 		\end{figure}
 	\end{frame}
 
@@ -124,18 +128,14 @@
 		with $h_{\bm{w}}(\mathsf{X}) = \sigma(\mathsf{X}\bm{w})$.
 	\end{frame}
 
-%	\begin{frame}
-%		\frametitle{Parenthesis - What is a convex function?}
-%		A function is \textsl{convex} when for all pairs of points on the graph, the line segment that connects these two points passes above the curve.
-%		
-%		A function is \textsl{concave} when its opposite is convex.
-%		
-%		\begin{figure}
-%			\centering
-%			\includegraphics[scale=0.1]{images/convexity}
-%			\caption{Geometric intuition of convexity}
-%		\end{figure}
-%	\end{frame}
+	\begin{frame}
+	\frametitle{Conditional Log-Likelihood and Binary Cross-Entropy}
+	In a \textit{binary classification} problem, the model provides a joint probability of the form
+	$$P(y^{(i)} | x^{(i)}; \bm{\theta}) = (\hat{y}^{(i)})^{y^{(i)}} (1-\hat{y}^{(i)})^{(1-{y}^{(i)})}$$
+	The log-likelihood is:
+	$$\sum_{i=1}^{N}\log P(y^{(i)} | x^{(i)}; \bm{\theta}) = \sum_{i=1}^{N}y^{(i)}\log(\hat{y}^{(i)}) + (1-{y}^{(i)})\log(1-\hat{y}^{(i)})$$
+	which is the \textbf{binary cross-entropy loss}.
+\end{frame}
 
 	\begin{frame}
 		\frametitle{Convexity}
@@ -145,24 +145,27 @@
 		\begin{figure}
 			\centering
 			\includegraphics[scale=0.25]{images/non_convex}
-			\caption{An example of a non-convex function}
+			\caption{An example of a non-convex function.}
 		\end{figure}
 		
-		Remember the main challenge/goal of ML: \textbf{generalization}.  A global minimum of the cost function corresponds to the best fit of the training set: this may lead to \textbf{overfitting}.
+		%Remember the main challenge/goal of ML: \textbf{generalization}.  A global minimum of the cost function corresponds to the best fit of the training set: this may lead to \textbf{overfitting}.
 	\end{frame}
 
-%	\begin{frame}
-%		\frametitle{Tips and Tricks - Is a local minimum always bad?}
-%		
-%		Remember the main challenge/goal of ML: \textbf{generalization}.
-%		
-%		\begin{itemize}
-%			\item A global minimum of the cost function corresponds to the best fit of the training set: this may lead to \textit{overfitting}.
-%			\item Having a convex cost function is convenient, but finding a local minimum is probably even better than a global minimum. 
-%		\end{itemize}
+	\begin{frame}
+		\frametitle{Is a local minimum always bad?}
+		
+		Answer: NO; remember the main challenge/goal of ML: \textbf{generalization}.
+		
+		\vspace{2mm}
+		
+		\begin{itemize}
+			\item A global minimum of the cost function corresponds to the best fit of the training set: this may lead to \textbf{overfitting}.
+			\item Having a convex cost function is convenient, but finding a local minimum is probably even better than a global minimum. 
+			\item Saddle points may be bottlenecks for gradient-based optimization, but there are techniques to avoid them (momentum, learning rate schedules, \dots) in modern optimization algorithms.
+		\end{itemize}
 %		
 %		%Worst case scenario: find a saddle point.
-%	\end{frame}
+	\end{frame}
 
 	\begin{frame}
 		\frametitle{Gradient descent - Derivative of the sigmoid}

@@ -100,23 +100,31 @@
 	
 	\begin{frame}
 		\frametitle{Digression: Maximum Likelihood Estimation}
+		Define:
 		\begin{itemize}
-			\item $p_{\rm data}(x)$: data-generating distribution (unknown)
-			\item $p_{\rm model}(x; \bm{\theta})$: mapping of each configuration $x$ into a real number estimating the true probability $p_{\rm data}(x)$, for a given set of parameters $\bm{\theta}$
-		\end{itemize}	
-		\vspace{2mm}
+			\item $p_{\rm data}(x)$: data-generating distribution (unknown);
+			\item $\hat{p}_{\rm data}$: \textbf{empirical distribution} defined by the training data;
+			\item $p_{\rm model}(x; \bm{\theta})$: mapping of each configuration $x$ into a real number estimating the true probability $p_{\rm data}(x)$, for a given set of parameters $\bm{\theta}$;
+			\item the \textit{likelihood} as a function that quantifies how likely it is to observe the data under different parameter settings.
+		\end{itemize}
+		Consider $N$ samples \textbf{drawn independently} from 	$p_{\rm data}(x)$.
+		
+		\vspace{4mm}
+		
 		\textit{Maximum Likelihood Estimator}:
 		$$ \bm{w} = \argmax_{\bm{\theta}} \prod_{i=1}^{N} p_{\rm model}(x^{(i)}; \bm{\theta}) $$
-		Take the log (does not change argmax) and divide by $N$:
-		\begin{align*}
-			\bm{w} &= \argmax_{\bm{\theta}}\mathbb{E}_{x \sim \hat{p}_{\rm data}} [\log p_{\rm model}(x; \bm{\theta})] \\
-			&= -\argmin_{\bm{\theta}}\mathbb{E}_{x \sim \hat{p}_{\rm data}} [\log p_{\rm model}(x; \bm{\theta})]
-		\end{align*} 
-		where $\hat{p}_{\rm data}$ is the \textbf{empirical distribution} defined by the training data.
-		This is equivalent to minimizing the \textit{dissimilarity} (or \textit{cross-entropy}) between $ \hat{p}_{\rm data}$ and $p_{\rm model}$:
-		$$ \mathbb{E}_{x \sim \hat{p}_{\rm data}} [\log \hat{p}_{\rm data}(x)-\log p_{\rm model}(x; \bm{\theta})] $$
+		
 	\end{frame}
-	
+	\begin{frame}
+		\frametitle{Maximum Likelihood Estimation /2}
+Take the log (does not change argmax) and divide by $N$:
+\begin{align*}
+	\bm{w} &= \argmax_{\bm{\theta}}\mathbb{E}_{x \sim \hat{p}_{\rm data}} [\log p_{\rm model}(x; \bm{\theta})] \\
+	&= -\argmin_{\bm{\theta}}\mathbb{E}_{x \sim \hat{p}_{\rm data}} [\log p_{\rm model}(x; \bm{\theta})]
+\end{align*} 
+This is equivalent to minimizing the \textit{dissimilarity} (or \textit{cross-entropy}) between $ \hat{p}_{\rm data}$ and $p_{\rm model}$:
+$$ \mathbb{E}_{x \sim \hat{p}_{\rm data}} [\log \hat{p}_{\rm data}(x)-\log p_{\rm model}(x; \bm{\theta})] $$
+	\end{frame}
 	\begin{frame}
 		\frametitle{Conditional Log-Likelihood and MSE}
 		The MLE estimator can be generalized to estimate a conditional probability $P(y^{(i)} | x^{(i)}; \bm{\theta})$ in order to predict $y^{(i)}$ given $x^{(i)}$. Assuming the samples are iid, we can write
