@@ -1,0 +1,143 @@
+\documentclass{beamer}
+\usepackage{subfig}
+\usepackage{amsmath}
+\usepackage{bm}
+
+\DeclareMathOperator*{\argmax}{arg\,max}
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\setbeamertemplate{footline}[frame number]
+\title{Ensemble learning and eXtreme Gradient Boosting (XGBoost)}
+\author{Prof. Alessandro Lucantonio}
+\institute{Aarhus University}
+\date{}
+
+\setbeamertemplate{navigation symbols}{}
+
+\begin{document}
+	\frame{\titlepage}
+	
+		\begin{frame}
+		\frametitle{Ensemble learning}
+		
+		\textit{Ensemble learning} combines several learners (models) to improve overall performance, increasing predictiveness and accuracy in machine learning and predictive modeling.
+		
+		\vspace{5mm}
+		
+		%Technically speaking, the power of ensemble models is simple: they can combine thousands of smaller learners trained on subsets of the original data. This can lead to interesting observations, like:
+		
+		\begin{itemize}
+		\item The \textit{variance} of the general model decreases significantly thanks to \textbf{bagging}.
+		\item The \textit{bias} also decreases due to \textbf{boosting}.
+		%\item And overall predictive power improves because of \textbf{stacking}.  
+		\end{itemize}
+		
+		
+	\end{frame}
+	
+	\begin{frame}
+		\frametitle{Bagging (boostrap aggregating)}
+		Reduces overall variance by combining multiple models. It trains \textit{multiple} models each on a different subset of the original dataset. Subsets are created  through random sampling with replacement (bootstrapping). When making predictions, bagging combines the outputs of all these models. 
+
+		\begin{figure}
+			\centering
+			\includegraphics[scale=.3]{images/bagging}
+			\caption{How bagging works for an ensemble of classifiers.}
+			\label{fig:bagging}
+		\end{figure}
+		
+	\end{frame}
+
+\begin{frame}
+	\frametitle{Decision Trees}
+	\small In a \textbf{decision tree}, nodes are split into sub-nodes based on a threshold value of a feature. The decision tree starts at the root node with all the data. At each node, it looks for the feature that best splits the data into two (or more) groups. This continues till reaching a maximum height for the tree or all samples belonging to the same class (leaf node). 
+		\begin{figure}
+		\centering
+		\includegraphics[scale=.28]{images/Decision_Tree}
+		\caption{Example of decision tree (from Wikipedia).}
+		\label{fig:bagging}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Classification And Regression Trees (CART)}
+	CART is a variation of the decision tree algorithm that can handle both classification and regression tasks. In CART, a real score is associated with each of the leaves, which gives us richer interpretations that go beyond classification.
+	\begin{figure}
+		\centering
+		\includegraphics[scale=.5]{images/cart}
+		\caption{Example of CART (from XGBoost tutorial).}
+		\label{fig:bagging}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Classification And Regression Trees (CART)}
+	Usually, a single tree is not strong enough to be used in practice. What is actually used is the ensemble model, which sums the prediction of multiple trees together.
+	\begin{figure}
+		\centering
+		\includegraphics[scale=.5]{images/twocart}
+		\caption{Ensemble of two CARTs (from XGBoost tutorial).}
+		\label{fig:bagging}
+	\end{figure}
+\end{frame}
+
+\begin{frame}
+	\frametitle{CART predictions}
+	
+	\begin{itemize}
+		\item Ensemble prediction:
+		\begin{align*}
+			\hat{y}_i = \sum_{k=1}^K f_k(x_i), f_k \in \mathcal{F}
+		\end{align*}
+		where $K$ is the number of trees and $f_k$ is a function in the set $\mathcal{F}$ of all possible CARTs. Specifically,
+		\begin{align*}
+			f_k(x) = w_{q(x)}, w \in R^T, q:R^d\rightarrow \{1,2,\cdots,T\} .
+		\end{align*}
+		where $w$ is the vector of the scores of the leaves, $T$ is the number of leaves and $q(x)$ is a function assigning each sample to the corresponding leaf.
+		\item Loss function for training:
+		\begin{align*}
+			\mathcal{L}(\theta) = \sum_i^n \ell(y_i, \hat{y}_i) + \sum_{k=1}^K \omega(f_k)
+		\end{align*}
+		where $\omega$ is a \textbf{regularization term} that penalizes the \textit{complexity} of a tree.
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Tree Boosting}
+	\small Instead of training all the trees at once, XGBoost uses \textbf{gradient boosting}: multiple decision trees are built sequentially, with each new tree trying to correct the errors of the previous trees.
+	
+	The predictions of the ensemble at each step $t$ are given by:
+	\begin{align*}
+	\begin{split}\hat{y}_i^{(0)} &= 0\\
+	\hat{y}_i^{(1)} &= f_1(x_i) = \hat{y}_i^{(0)} + f_1(x_i)\\
+	\hat{y}_i^{(2)} &= f_1(x_i) + f_2(x_i)= \hat{y}_i^{(1)} + f_2(x_i)\\
+	&\dots\\
+	\hat{y}_i^{(t)} &= \sum_{k=1}^t f_k(x_i)= \hat{y}_i^{(t-1)} + f_t(x_i)\end{split}
+	\end{align*}
+	
+	At each step we add the tree that minimizes:
+	\begin{align*}
+	\mathcal{L}^{(t)} & = \sum_{i=1}^n l(y_i, \hat{y}_i^{(t)}) + \sum_{i=1}^t\omega(f_i) 
+	\end{align*}
+	When building each tree, XGBoost uses the gradient of the loss to decide where to split nodes.
+	
+\end{frame}
+
+\begin{frame}
+\frametitle{XGBoost hyperparameters}
+
+\small \begin{itemize}
+\item \texttt{n\_estimators}: The total number of trees (or boosting rounds). More trees can improve accuracy but may lead to overfitting and increase training time.
+\item \texttt{max\_depth}: The maximum depth of each tree. Higher values allow the model to learn more complex patterns but increase the risk of overfitting. Common values range from 3 to 10.
+\item \texttt{gamma}: The minimum loss reduction required for a split to occur. Higher values prevent splits that don’t contribute enough gain, which helps regularize the model and reduce overfitting.
+%\item \texttt{lambda}: L2 regularization term on leaf weights, which penalizes larger weights and reduces the impact of high weights on predictions.
+%\item \texttt{alpha}: L1 regularization term, which makes leaf weights sparser (more likely to be zero), simplifying the model and helping reduce overfitting.
+\item \texttt{learning\_rate} (also called \texttt{eta}): The step size shrinkage for each boosting step. Lower values (e.g., 0.01 to 0.3) make the model learn more slowly but can increase accuracy if paired with a higher \texttt{n\_estimators} value. A common choice is to start with a small learning rate and increase the number of boosting rounds.
+\end{itemize}
+
+Check the \href{https://xgboost.readthedocs.io/en/stable/parameter.html}{XGBoost docs} for more info.
+
+\end{frame}
+	
+\end{document}
