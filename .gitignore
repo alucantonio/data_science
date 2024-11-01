@@ -10,3 +10,4 @@
 *.Identifier
 *.pdf
 slides/*.pdf
+ml/data/FashionMNIST
