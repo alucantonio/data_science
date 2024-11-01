@@ -12,7 +12,7 @@
 \title{Neural Networks}
 \author{Prof. Alessandro Lucantonio}
 \institute{Aarhus University}
-\date{7/11/2023}
+\date{}
 
 \setbeamertemplate{footline}[frame number]
 \setbeamertemplate{navigation symbols}{}
@@ -27,8 +27,8 @@
 			\setlength\itemsep{5mm}
 			\item Neural Networks (NN) are one of the most flexible ML tools
 			\item \textit{Universal approximators}
-			\item Can manipulate continous and discrete data $\leadsto$ regression and classification problems
-			\item Not a single model: many types of NN (e.g. MLP, CNN, RNN)
+			\item Can manipulate continous and discrete data (regression and classification)
+			\item Many types of NN (e.g. MLP, CNN, RNN)
 			\item (Loosely) inspired by biological systems
 		\end{itemize}
 	\end{frame}
@@ -38,7 +38,7 @@
 	\begin{figure}
 		\centering
 		\includegraphics[scale=0.2]{images/perceptron}
-		\caption{Representation of a perceptron.}
+		\caption{Schematic of a perceptron.}
 	\end{figure}
 \end{frame}
 
@@ -46,6 +46,7 @@
 	\begin{frame}
 		\frametitle{Multi-Layer Perceptron (MLP)}
 		The MLP is a fundamental type of NN: it consists of three types (input, hidden, output) of fully-connected layers such that information flows forward from the inputs to the output.
+		\vspace{5mm}
 		\begin{figure}
 			\centering
 			\includegraphics[scale=0.35]{images/mlp-visualization}
@@ -84,7 +85,7 @@
 			\end{cases}
 		\end{equation*}
 	
-		with $z$  the \textbf{net input} to the neuron, $ \bm{b}$ is the \textbf{bias} and $f$ is the \textbf{activation function}. 
+		with $z$  the \textbf{net input} to the neuron, $ \bm{b}$ is the \textbf{bias} and $f$ is the \textbf{activation function}. Notice: $\bm{w}$, $\bm{x}$, and $\bm{b}$ are column vectors.
 		
 		\vspace{5mm}
 		
@@ -116,10 +117,20 @@
 		\frametitle{Activation functions - Features}
 		\begin{itemize}
 			\item ReLU: excellent default choice (easy to optimize because they are similar to linear units), the derivative remains large when active,  disregard the non-differentiability
-			\item Sigmoid: saturates when the argument is either very positive or very negative $\leadsto$ gradient-based learning may be hard, better not to use them as hidden units unless appropriate cost function can undo the saturation in the output layer (when output is a probability)
+			\item Sigmoid: can be useful when output of the network is a probability, but saturates when the argument is either very positive or very negative $\leadsto$ gradient-based learning may be hard (better not to use them as hidden units, unless appropriate cost function such as the binary cross-entropy, can undo the saturation in the output layer)
 			\item Tanh: performs better than sigmoid when the latter must be used, similar to the identity near 0, composition of two tanh resembles a linear model as long as the argument is small (easier training)
 		\end{itemize}
 	\end{frame}
+
+	\begin{frame}
+	\frametitle{MLP - Features}
+	\begin{itemize}
+		\setlength\itemsep{5mm}
+		\item This type of NN is also called \textbf{feedforward NN} because information flows from input to output without feedback
+		\item The hypothesis function is \textit{non-convex} because composition of convex functions is not necessarily convex
+		\item Theory tells us that one-layer MLPs are \textbf{universal approximators}, \textit{i.e.} they approximate \textit{any continuous function} with any desired accuracy (not a formal statement), even though the layer may be infeasible large and may fail to learn and generalize correctly
+	\end{itemize}
+\end{frame}
 
 	\begin{frame}
 		\frametitle{MLP representation - Formal}
@@ -166,7 +177,7 @@
 
 	\begin{frame}
 		\frametitle{MLP representation - Example}
-		Assume single sample, 3 inputs, 1 hidden layer/4 units, 1 output:
+		Assume single sample, 3 features, 1 hidden layer/4 units, 1 output:
 		\tiny{
 		\begin{itemize}
 			\item $\bm{x}$ is a 3x1 vector
@@ -226,18 +237,10 @@
 		
 	\end{frame}
 
-	\begin{frame}
-	\frametitle{MLP - Features}
-	\begin{itemize}
-		\setlength\itemsep{5mm}
-		\item This type of NN is also called \textbf{feedforward NN} because information flows from input to output without feedback
-		\item The hypothesis function is \textit{ non-convex} because composition of convex functions is not necessarily convex
-		\item Theory tells us that one-layer MLPs are \textbf{universal approximators}, \textit{i.e.} they approximate \textit{any continuous function} with any desired accuracy (not a formal statement), even though the layer may be infeasible large and may fail to learn and generalize correctly
-	\end{itemize}
-\end{frame}
+
 
 	\begin{frame}
-		\frametitle{Tips and Tricks - Is one layer really enough?}
+		\frametitle{Is one layer really enough?}
 		Theory suggests us that the answer is yes, but pay attention: \textit{an exponential number of hidden units} (w.r.t. the input dimension) may be needed to approximate well the data, \textit{i.e.} one hidden unit for each input configuration that needs to be distinguished.
 		
 		\vspace{5mm}
@@ -256,7 +259,7 @@
 		
 		\begin{itemize}
 			\item NNs are represented as \textbf{computational graphs}
-			\item the \textit{chain rule of Calculus} is used to compute derivatives by composing operations in a specific order that is highly efficient
+			\item the \textit{chain rule of Calculus} is used to compute derivatives by composing operations
 		\end{itemize}
 		
 		\begin{figure}
@@ -291,7 +294,7 @@
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{Tips and Tricks - NN best practices}
+		\frametitle{Best practices for NN training}
 		\begin{itemize}
 			\item Initialize all weights \textit{randomly} near zero (or use other initialization techniques), but \textbf{do not} initialize uniformly to \textit{break symmetry} and avoid \textit{vanishing/exploding gradients}
 			\item If a learning algorithm is suffering from \textit{high bias}, getting more training data will not (by itself) help much. Instead, if a learning algorithm is suffering from \textit{high variance}, getting more training data is likely to help
@@ -302,71 +305,22 @@
 	\end{frame}
 	
 	\begin{frame}
-		\frametitle{Basic Recipe for Machine Learning}
+		\frametitle{Basic recipe for Machine Learning}
 		\begin{itemize}
-			\item If your model has a high bias:
+			\item If the model has a \textbf{high bias}:
 			\begin{itemize}
-				\item Try to make your NN bigger (number of hidden units, number of layers)
-				\item Try a different model that is suitable for your data
+				\item Try to make the NN ``bigger'' (number of hidden units, number of layers)
+				\item Try a different model (more suitable to the data)
 				\item Try to increase the number of epochs
 			\end{itemize}
-			\item If your model has a high variance:
+			\item If the model has a \textbf{high variance}:
 			\begin{itemize}
 				\item More data
 				\item Try regularization
-				\item Try a different model that is suitable for your data
+				\item Try a different model (more suitable to the data)
 			\end{itemize}
-			You should try the previous two points until you achieve low bias and low variance.
+			You should try the previous two points until you achieve a good trade-off between bias and variance.
 		\end{itemize}
 	\end{frame}
-	
-		\begin{frame}
-		\frametitle{Digression: Maximum Likelihood Estimation}
-		\begin{itemize}
-			\item $p_{\rm data}(x)$: data-generating distribution (unknown)
-			\item $p_{\rm model}(x; \bm{\theta})$: mapping of each configuration $x$ into a real number estimating the true probability $p_{\rm data}(x)$, for a given set of parameters $\bm{\theta}$
-		\end{itemize}	
-		\vspace{2mm}
-		\textit{Maximum Likelihood Estimator}:
-		$$ \bm{w} = \argmax_{\bm{\theta}} \prod_{i=1}^{N} p_{\rm model}(x^{(i)}; \bm{\theta}) $$
-		Take the log (does not change argmax) and divide by $N$:
-		\begin{align*}
-			\bm{w} &= \argmax_{\bm{\theta}}\mathbb{E}_{x \sim \hat{p}_{\rm data}} [\log p_{\rm model}(x; \bm{\theta})] \\
-			&= -\argmin_{\bm{\theta}}\mathbb{E}_{x \sim \hat{p}_{\rm data}} [\log p_{\rm model}(x; \bm{\theta})]
-		\end{align*} 
-		where $\hat{p}_{\rm data}$ is the \textbf{empirical distribution} defined by the training data.
-		This is equivalent to minimizing the \textit{dissimilarity} (or \textit{cross-entropy}) between $ \hat{p}_{\rm data}$ and $p_{\rm model}$:
-		$$ \mathbb{E}_{x \sim \hat{p}_{\rm data}} [\log \hat{p}_{\rm data}(x)-\log p_{\rm model}(x; \bm{\theta})] $$
-		\end{frame}
-		
-		\begin{frame}
-			\frametitle{Conditional Log-Likelihood and MSE}
-			The MLE estimator can be generalized to estimate a conditional probability $P(y^{(i)} | x^{(i)}; \bm{\theta})$ in order to predict $y^{(i)}$ given $x^{(i)}$. Assuming the samples are iid, we can write
-			\begin{align*}
-				\bm{w} &= \argmax_{\bm{\theta}}\sum_{i=1}^{N}\log P(y^{(i)} | x^{(i)}; \bm{\theta})
-			\end{align*} 
-			Think of the model as producing a conditional probability distribution. Assume:
-			$$ P(y^{(i)} | x^{(i)}; \bm{\theta}) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{\|\hat{y}^{(i)}-y^{(i)}\|^2}{2\sigma^2}\right)$$
-			where $\hat{y}^{(i)}$ is the prediction of the mean of the Gaussian. Then
-			$$\sum_{i=1}^{N}\log P(y^{(i)} | x^{(i)}; \bm{\theta}) = -N\log \sigma - \frac{N}{2}\log (2\pi) - \sum_{i=1}^{N}\frac{\|\hat{y}^{(i)}-y^{(i)}\|^2}{2\sigma^2}$$
-		\end{frame}
-		
-		\begin{frame}
-			\frametitle{Conditional Log-Likelihood and MSE}
-			Compare the log-likelihood with MSE:
-			$$\sum_{i=1}^{N}\log P(y^{(i)} | x^{(i)}; \bm{\theta}) = -N\log \sigma - \frac{N}{2}\log (2\pi) - \sum_{i=1}^{N}\frac{\|\hat{y}^{(i)}-y^{(i)}\|^2}{2\sigma^2}$$
-			$$ \textrm{MSE} = \frac{1}{N}  \sum_{i=1}^{N}\|\hat{y}^{(i)}-y^{(i)}\|^2$$
-			\textit{Maximizing} the \textbf{log-likelihood }with respect to the parameters yields the same estimate of them as does \textit{minimizing} the \textbf{MSE}.
-
-		\end{frame}
-		
-			\begin{frame}
-			\frametitle{Conditional Log-Likelihood and Binary Cross-Entropy}
-			In a \textit{binary classification} problem, consider
-			$$P(y^{(i)} | x^{(i)}; \bm{\theta}) = (\hat{y}^{(i)})^{y^{(i)}} (1-\hat{y}^{(i)})^{(1-{y}^{(i)})}$$
-			The log-likelihood is:
-			$$\sum_{i=1}^{N}\log P(y^{(i)} | x^{(i)}; \bm{\theta}) = \sum_{i=1}^{N}y^{(i)}\log(\hat{y}^{(i)}) + (1-{y}^{(i)})\log(1-\hat{y}^{(i)})$$
-			which is the \textbf{binary cross-entropy loss}.
-		\end{frame}
 		
 \end{document}
