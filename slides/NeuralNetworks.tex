@@ -117,8 +117,8 @@
 		\frametitle{Activation functions - Features}
 		\begin{itemize}
 			\item ReLU: excellent default choice (easy to optimize because they are similar to linear units), the derivative remains large when active,  disregard the non-differentiability
-			\item Sigmoid: can be useful when output of the network is a probability, but saturates when the argument is either very positive or very negative $\leadsto$ gradient-based learning may be hard (better not to use them as hidden units, unless appropriate cost function such as the binary cross-entropy, can undo the saturation in the output layer)
-			\item Tanh: performs better than sigmoid when the latter must be used, similar to the identity near 0, composition of two tanh resembles a linear model as long as the argument is small (easier training)
+			\item Sigmoid: can be useful when output of the network is a probability, but \textbf{saturates} when the argument is either very positive or very negative $\leadsto$ gradient-based learning may be hard (better not to use them as hidden units, unless appropriate cost function such as the binary cross-entropy, can undo the saturation in the output layer)
+			\item Tanh: similar to sigmoid, close to the identity near 0 $\leadsto$ composition of two tanh resembles a linear model as long as the argument is small (easier training)
 		\end{itemize}
 	\end{frame}
 
@@ -126,11 +126,34 @@
 	\frametitle{MLP - Features}
 	\begin{itemize}
 		\setlength\itemsep{5mm}
-		\item This type of NN is also called \textbf{feedforward NN} because information flows from input to output without feedback
-		\item The hypothesis function is \textit{non-convex} because composition of convex functions is not necessarily convex
+		\item MLP are a type of \textbf{feedforward NN} because information flows from input to output without feedback
+		\item The hypothesis function is \textit{non-convex} because activation functions are generally non-convex and composition of convex functions is non-convex
 		\item Theory tells us that one-layer MLPs are \textbf{universal approximators}, \textit{i.e.} they approximate \textit{any continuous function} with any desired accuracy (not a formal statement), even though the layer may be infeasible large and may fail to learn and generalize correctly
 	\end{itemize}
 \end{frame}
+
+\begin{frame}
+	\frametitle{Is one layer really enough?}
+	Theory suggests us that the answer is yes, but pay attention: \textit{an exponential number of hidden units} (w.r.t. the input dimension) may be needed to approximate well the data, \textit{i.e.} one hidden unit for each input configuration that needs to be distinguished.
+	
+	\vspace{5mm}
+	\begin{itemize}
+		\item Empirically, increasing the \textit{depth} results in better generalization for a wide variety of tasks (even though training is harder)
+		\item Try different architectures in the model selection
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}
+	\frametitle{Depth vs width}
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\linewidth]{images/depth}
+	%\caption{}
+	\label{fig:depth}
+\end{figure}
+\end{frame}
+
 
 	\begin{frame}
 		\frametitle{MLP representation - Formal}
@@ -239,17 +262,7 @@
 
 
 
-	\begin{frame}
-		\frametitle{Is one layer really enough?}
-		Theory suggests us that the answer is yes, but pay attention: \textit{an exponential number of hidden units} (w.r.t. the input dimension) may be needed to approximate well the data, \textit{i.e.} one hidden unit for each input configuration that needs to be distinguished.
-		
-		\vspace{5mm}
-		\begin{itemize}
-			\item Empirically, increasing the \textit{depth} results in better generalization for a wide variety of tasks (even though training is harder)
-			\item Try different architectures in the model selection
-		\end{itemize}
-		
-	\end{frame}
+	
 
 	\begin{frame}
 		\frametitle{Back-propagation}
